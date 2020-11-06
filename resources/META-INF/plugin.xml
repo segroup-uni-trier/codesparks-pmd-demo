@@ -1,0 +1,27 @@
+<idea-plugin>
+  <id>de.unitrier.st.codesparks.fst20</id>
+  <name>FST'20</name>
+  <version>1.0</version>
+  <vendor email="softwaretechnik@informatik.uni-trier.de" url="https://www.st.uni-trier.de">Software Engineering Group</vendor>
+
+  <!--description>FST'20</description-->
+
+  <!--change-notes>
+  </change-notes-->
+
+  <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+  <idea-version since-build="173.0"/>
+
+  <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+       on how to target different products -->
+  <depends>com.intellij.modules.platform</depends>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <!-- Add your extensions here -->
+  </extensions>
+
+  <actions>
+    <!-- Add your actions here -->
+  </actions>
+
+</idea-plugin>
