@@ -19,7 +19,7 @@
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceInterface="de.unitrier.st.codesparks.core.service.CodeSparksInstanceService"
+        <applicationService serviceInterface="de.unitrier.st.codesparks.core.service.ACodeSparksInstanceService"
                             serviceImplementation="de.unitrier.st.codesparks.fst20.PMDInstanceService"/>
     </extensions>
 
@@ -31,7 +31,12 @@
                 description="Start pmd flow">
             <add-to-group group-id="MainToolBar" anchor="last"/>
         </action>
-
+        <action id="toggle.show.hide.visualizations"
+                class="de.unitrier.st.codesparks.core.action.ToggleVisualization"
+                text="Hide CodeSparks Visualizations"
+                icon="/icons/codesparks_visible_20x13.png">
+                <add-to-group group-id="MainToolBar" anchor="last"/>
+        </action>
     </actions>
 
 </idea-plugin>

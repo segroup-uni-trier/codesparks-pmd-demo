@@ -2,7 +2,7 @@ package de.unitrier.st.codesparks.fst20;
 
 import de.unitrier.st.codesparks.core.CoreUtil;
 import de.unitrier.st.codesparks.core.data.AArtifact;
-import de.unitrier.st.codesparks.core.data.CodeSparksThread;
+import de.unitrier.st.codesparks.core.data.ACodeSparksThread;
 
 import java.util.List;
 import java.util.Map;
@@ -22,7 +22,7 @@ public class PMDArtifact extends AArtifact
     }
 
     @Override
-    public Map<String, List<CodeSparksThread>> getThreadTypeLists()
+    public Map<String, List<ACodeSparksThread>> getThreadTypeLists()
     {
         return null;
     }
