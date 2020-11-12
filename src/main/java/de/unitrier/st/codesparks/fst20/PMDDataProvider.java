@@ -3,7 +3,6 @@ package de.unitrier.st.codesparks.fst20;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.extensions.PluginId;
-import de.unitrier.st.codesparks.core.ArtifactPoolManager;
 import de.unitrier.st.codesparks.core.IArtifactPool;
 import de.unitrier.st.codesparks.core.IDataProvider;
 import de.unitrier.st.codesparks.core.logging.CodeSparksLogger;

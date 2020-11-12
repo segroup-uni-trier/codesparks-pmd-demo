@@ -19,7 +19,8 @@
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <!-- Add your extensions here -->
+        <applicationService serviceInterface="de.unitrier.st.codesparks.core.service.CodeSparksInstanceService"
+                            serviceImplementation="de.unitrier.st.codesparks.fst20.PMDInstanceService"/>
     </extensions>
 
     <actions>

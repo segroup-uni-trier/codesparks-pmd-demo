@@ -11,10 +11,12 @@ import java.util.Map;
 public class PMDArtifactPool extends AArtifactPool
 {
     private final Map<String, PMDArtifact> artifacts;
+    //private final Map<String, List<AArtifact>> artifactTypeLists;
 
     PMDArtifactPool()
     {
         artifacts = new HashMap<>();
+//        artifactTypeLists = new HashMap<>();
     }
 
     @Override
@@ -38,7 +40,9 @@ public class PMDArtifactPool extends AArtifactPool
     @Override
     public Map<String, List<AArtifact>> getNamedArtifactTypeLists()
     {
-        return null;
+        final HashMap<String, List<AArtifact>> stringListHashMap = new HashMap<>(1);
+        stringListHashMap.put("PMDArtifact", getArtifacts());
+        return stringListHashMap;
     }
 
     void add(final PMDArtifact pmdArtifact)
