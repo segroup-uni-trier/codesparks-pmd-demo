@@ -30,15 +30,17 @@
         <action id="codesparks.start.flow"
                 class="de.unitrier.st.codesparks.fst20.actions.StartPMDFlow"
                 text="Start PMD Flow"
-                description="Start pmd flow">
+                description="Start pmd flow"
+                icon="/icons/pmd_37x15.png"
+        >
             <add-to-group group-id="MainToolBar" anchor="last"/>
         </action>
-        <action id="toggle.show.hide.visualizations"
+        <!--action id="toggle.show.hide.visualizations"
                 class="de.unitrier.st.codesparks.core.action.ToggleVisualization"
                 text="Hide CodeSparks Visualizations"
                 icon="/icons/codesparks_visible_20x13.png">
                 <add-to-group group-id="MainToolBar" anchor="last"/>
-        </action>
+        </action-->
     </actions>
 
 </idea-plugin>

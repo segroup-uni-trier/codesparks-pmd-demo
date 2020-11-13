@@ -10,6 +10,24 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="codesparks-core" />
-    <orderEntry type="library" name="PMD" level="project" />
+    <orderEntry type="module-library">
+      <library name="PMD">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/antlr4-runtime-4.7.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/asm-9.0-beta.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/commons-io-2.6.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/commons-lang3-3.8.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/gson-2.8.5.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jcommander-1.48.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/pmd-core-6.29.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/pmd-java-6.29.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/saxon-9.1.0.8-dom.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/lib/pmd-java-6.29.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
   </component>
 </module>

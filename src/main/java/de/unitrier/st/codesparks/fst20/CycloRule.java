@@ -3,24 +3,16 @@ package de.unitrier.st.codesparks.fst20;
 import de.unitrier.st.codesparks.core.logging.CodeSparksLogger;
 import net.sourceforge.pmd.lang.java.ast.ASTConstructorDeclaration;
 import net.sourceforge.pmd.lang.java.ast.ASTMethodDeclaration;
-import net.sourceforge.pmd.lang.java.ast.ASTMethodOrConstructorDeclaration;
-import net.sourceforge.pmd.lang.java.ast.MethodLikeNode;
 import net.sourceforge.pmd.lang.java.metrics.api.JavaOperationMetricKey;
 import net.sourceforge.pmd.lang.java.rule.AbstractJavaRule;
 import net.sourceforge.pmd.lang.metrics.MetricsUtil;
 
-public class CycloRule extends AbstractJavaRule
+public final class CycloRule extends AbstractJavaRule
 {
-
-    public Object visit(ASTMethodOrConstructorDeclaration node, Object data) {
-
-
-        return visit((MethodLikeNode) node, data);
-    }
-
-
+    @Override
     public Object visit(final ASTConstructorDeclaration node, final Object data)
     {
+        CodeSparksLogger.addText("Visited an ASTConstructorDeclaration");
         return super.visit(node, data);
     }
 
