@@ -5,6 +5,8 @@ import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.extensions.PluginId;
 import de.unitrier.st.codesparks.core.IArtifactPool;
 import de.unitrier.st.codesparks.core.IDataProvider;
+import de.unitrier.st.codesparks.core.data.AArtifact;
+import de.unitrier.st.codesparks.core.data.ArtifactBuilder;
 import de.unitrier.st.codesparks.core.logging.CodeSparksLogger;
 import net.sourceforge.pmd.*;
 import net.sourceforge.pmd.lang.LanguageVersion;
@@ -190,29 +192,59 @@ public class PMDDataProvider implements IDataProvider
             final String className = ruleViolation.getClassName();
             final String methodName = ruleViolation.getMethodName();
             final int beginLine = ruleViolation.getBeginLine();
-            final int endLine = ruleViolation.getEndLine();
+//            final int endLine = ruleViolation.getEndLine();
             final String filename = ruleViolation.getFilename();
 
-            final String identifier = filename + "[" + beginLine + ":" + endLine + "]";
+            String name = packageName + "." + className;
+            if (!"".equals(methodName))
+            {
+                name += "." + methodName;
+            }
 
-            final PMDArtifact pmdArtifact = new PMDArtifact(
-                    packageName + "." + className + "." + methodName
-                    , identifier
-            );
+            final String idName;
+            if ("".equals(methodName))
+            {
+                idName = className;
+            } else
+            {
+                idName = methodName;
+            }
+
+            final String artifactIdentifier = PMDArtifactUtil.getArtifactIdentifier(filename, idName, beginLine);
+
+
+//            final PMDArtifact pmdArtifact = new PMDArtifact(name, identifier);
+
             final String[] s = description.split(" ");
 
             String metricValue;
             if (s.length == 9)
             {
-                metricValue = s[8].substring(0, 1);
+                metricValue = s[8];
             } else
             {
                 metricValue = s[9];
             }
 
+            if (metricValue.endsWith("."))
+            {
+                metricValue = metricValue.substring(0, 1);
+            }
+
+
             int value = Integer.parseInt(metricValue);
-            pmdArtifact.setMetricValue(value);
-            pmdArtifactPool.add(pmdArtifact);
+
+            final ArtifactBuilder artifactBuilder = new ArtifactBuilder(PMDArtifact.class);
+
+            final AArtifact artifact = artifactBuilder
+                    .setFileName(filename)
+                    .setLineNumber(beginLine)
+                    .setIdentifier(artifactIdentifier)
+                    .setName(name)
+                    .setMetricValue(value)
+                    .get();
+
+            pmdArtifactPool.add(artifact);
         }
 
         return pmdArtifactPool;

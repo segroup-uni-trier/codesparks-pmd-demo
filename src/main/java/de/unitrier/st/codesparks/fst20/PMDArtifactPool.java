@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class PMDArtifactPool extends AArtifactPool
 {
-    private final Map<String, PMDArtifact> artifacts;
+    private final Map<String, AArtifact> artifacts;
     //private final Map<String, List<AArtifact>> artifactTypeLists;
 
     PMDArtifactPool()
@@ -45,7 +45,7 @@ public class PMDArtifactPool extends AArtifactPool
         return stringListHashMap;
     }
 
-    void add(final PMDArtifact pmdArtifact)
+    void add(final AArtifact pmdArtifact)
     {
         synchronized (artifacts)
         {

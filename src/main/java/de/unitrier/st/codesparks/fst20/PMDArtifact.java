@@ -9,6 +9,11 @@ import java.util.Map;
 
 public class PMDArtifact extends AArtifact
 {
+    public PMDArtifact()
+    {
+
+    }
+
     protected PMDArtifact(final String name, final String identifier)
     {
         super(name, identifier);
