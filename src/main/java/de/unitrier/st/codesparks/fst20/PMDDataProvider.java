@@ -4,6 +4,7 @@ import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.extensions.PluginId;
+import de.unitrier.st.codesparks.core.IArtifactClassDisplayNameProvider;
 import de.unitrier.st.codesparks.core.IArtifactPool;
 import de.unitrier.st.codesparks.core.IDataProvider;
 import de.unitrier.st.codesparks.core.data.AArtifact;
@@ -177,6 +178,18 @@ public class PMDDataProvider implements IDataProvider
     {
         final PMDArtifactPool pmdArtifactPool = new PMDArtifactPool();
 
+        pmdArtifactPool.registerArtifactClassDisplayNameProvider(new IArtifactClassDisplayNameProvider() {
+            @Override
+            public String getDisplayName(Class<? extends AArtifact> artifactClass)
+            {
+                if (artifactClass.equals(PMDArtifact.class))
+                {
+                    return "PMD Cyclo";
+                }
+                return artifactClass.getSimpleName();
+            }
+        });
+
         for (final RuleViolation ruleViolation : ruleViolations)
         {
             final String description = ruleViolation.getDescription();
@@ -232,17 +245,17 @@ public class PMDDataProvider implements IDataProvider
                 // ignored
             }
 
-            final ArtifactBuilder artifactBuilder = new ArtifactBuilder(PMDArtifact.class);
+            final ArtifactBuilder artifactBuilder = new ArtifactBuilder(name, artifactIdentifier, PMDArtifact.class);
 
             final AArtifact artifact = artifactBuilder
                     .setFileName(filename)
                     .setLineNumber(beginLine)
-                    .setIdentifier(artifactIdentifier)
-                    .setName(name)
                     .setMetricValue(value)
                     .get();
 
-            pmdArtifactPool.add(artifact);
+            pmdArtifactPool.addArtifact(artifact);
+
+//            pmdArtifactPool.add(artifact);
         }
 
         return pmdArtifactPool;
