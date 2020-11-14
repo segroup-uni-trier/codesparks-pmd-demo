@@ -89,8 +89,8 @@ public class CycloArtifactVisualizationLabelFactory extends AArtifactVisualizati
          * Set the actual image icon size
          */
         int actualIconWidth = X_OFFSET + RECTANGLE_WIDTH + 4 * CALLEE_TRIANGLES_WIDTH + 1;
-        BufferedImage subimage = bi.getSubimage(0, 0, actualIconWidth, bi.getHeight());
-        ImageIcon imageIcon = new ImageIcon(subimage);
+        BufferedImage subImage = bi.getSubimage(0, 0, actualIconWidth, bi.getHeight());
+        ImageIcon imageIcon = new ImageIcon(subImage);
 
 //        artifactImageIconCache.put(artifact, imageIcon);
 
