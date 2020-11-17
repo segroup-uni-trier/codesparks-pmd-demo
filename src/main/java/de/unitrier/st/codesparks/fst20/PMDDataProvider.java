@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class PMDDataProvider implements IDataProvider
+final class PMDDataProvider implements IDataProvider
 {
     private final String projectPath;
 

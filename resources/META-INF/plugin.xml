@@ -28,7 +28,7 @@
     <actions>
         <!-- Add your actions here -->
         <action id="codesparks.start.flow"
-                class="de.unitrier.st.codesparks.fst20.actions.StartPMDFlow"
+                class="de.unitrier.st.codesparks.fst20.StartPMDFlowAction"
                 text="Start PMD Flow"
                 description="Start pmd flow"
                 icon="/icons/pmd_37x15.png"
