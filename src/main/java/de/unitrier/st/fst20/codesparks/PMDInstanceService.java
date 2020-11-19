@@ -1,4 +1,4 @@
-package de.unitrier.st.codesparks.fst20;
+package de.unitrier.st.fst20.codesparks;
 
 import de.unitrier.st.codesparks.core.service.ACodeSparksInstanceService;
 
@@ -6,6 +6,6 @@ public final class PMDInstanceService extends ACodeSparksInstanceService
 {
     public String getPluginIdString()
     {
-        return "de.unitrier.st.codesparks.fst20.pmd.demo";
+        return "de.unitrier.st.fst20.codesparks.pmd.demo";
     }
 }

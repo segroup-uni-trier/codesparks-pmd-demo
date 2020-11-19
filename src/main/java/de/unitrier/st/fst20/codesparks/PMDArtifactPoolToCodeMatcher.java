@@ -1,4 +1,4 @@
-package de.unitrier.st.codesparks.fst20;
+package de.unitrier.st.fst20.codesparks;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
