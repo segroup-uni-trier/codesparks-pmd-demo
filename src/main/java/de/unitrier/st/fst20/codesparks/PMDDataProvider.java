@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-final class PMDDataProvider implements IDataProvider
+final class PMDDataProvider implements IDataProvider, PMDMetrics
 {
     private final String projectPath;
 
@@ -174,7 +174,8 @@ final class PMDDataProvider implements IDataProvider
     {
         final PMDArtifactPool pmdArtifactPool = new PMDArtifactPool();
 
-        pmdArtifactPool.registerArtifactClassDisplayNameProvider(new IArtifactClassDisplayNameProvider() {
+        pmdArtifactPool.registerArtifactClassDisplayNameProvider(new IArtifactClassDisplayNameProvider()
+        {
             @Override
             public String getDisplayName(Class<? extends AArtifact> artifactClass)
             {
@@ -246,7 +247,7 @@ final class PMDDataProvider implements IDataProvider
             final AArtifact artifact = artifactBuilder
                     .setFileName(filename)
                     .setLineNumber(beginLine)
-                    .setMetricValue(value)
+                    .setNumericMetricValue(CYCLOMATIC_COMPLEXITY, value)
                     .get();
 
             pmdArtifactPool.addArtifact(artifact);

@@ -18,6 +18,11 @@ import static de.unitrier.st.codesparks.core.visualization.VisConstants.*;
 
 public class CycloArtifactVisualizationLabelFactory extends AArtifactVisualizationLabelFactory
 {
+    protected CycloArtifactVisualizationLabelFactory(final String primaryMetricIdentifier)
+    {
+        super(primaryMetricIdentifier);
+    }
+
     @Override
     public JLabel createArtifactLabel(@NotNull AArtifact artifact)
     {
@@ -44,7 +49,7 @@ public class CycloArtifactVisualizationLabelFactory extends AArtifactVisualizati
         /*
          * Draw the intensity rectangle
          */
-        int metricValue = (int) artifact.getMetricValue();
+        int metricValue = (int) artifact.getNumericalMetricValue(primaryMetricIdentifier);
         Color green = Color.decode("#1C9109");
         Color orange = Color.decode("#AF570B");
         Color red = Color.decode("#AF0B0B");

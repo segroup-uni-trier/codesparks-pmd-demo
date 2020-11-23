@@ -7,13 +7,15 @@ import de.unitrier.st.codesparks.core.java.JavaCurrentFileArtifactFilter;
 import de.unitrier.st.codesparks.core.visualization.AArtifactVisualizationLabelFactory;
 import de.unitrier.st.codesparks.core.visualization.DefaultDataVisualizer;
 
-public class PMDFlow extends ACodeSparksFlow
+public class PMDFlow extends ACodeSparksFlow implements PMDMetrics
 {
     public PMDFlow(final Project project)
     {
         super(project);
 
         registerCurrentFileArtifactFilter(JavaCurrentFileArtifactFilter.getInstance(ABaseArtifact::getName));
+
+        registerPrimaryMetricIdentifier(CYCLOMATIC_COMPLEXITY);
 
         final String basePath = project.getBasePath();
 
@@ -24,7 +26,7 @@ public class PMDFlow extends ACodeSparksFlow
         dataVisualizer = new DefaultDataVisualizer(new AArtifactVisualizationLabelFactory[]{
 //                new DummyArtifactVisualizationLabelFactory(),
 //                new DefaultArtifactVisualizationLabelFactory()
-                new CycloArtifactVisualizationLabelFactory()
+                new CycloArtifactVisualizationLabelFactory(CYCLOMATIC_COMPLEXITY)
         });
 
     }
