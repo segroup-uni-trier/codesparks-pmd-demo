@@ -13,6 +13,7 @@ import de.unitrier.st.codesparks.core.data.AArtifact;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class PMDArtifactPoolToCodeMatcher implements IArtifactPoolToCodeMatcher
 {
@@ -42,15 +43,19 @@ public class PMDArtifactPoolToCodeMatcher implements IArtifactPoolToCodeMatcher
             final Document document = documentManager.getDocument(psiFile);
             assert document != null;
 
-            final Collection<PsiMethod> psiMethods = ApplicationManager.getApplication().runReadAction((Computable<Collection<PsiMethod>>) () ->
-                    PsiTreeUtil.findChildrenOfType(psiFile, PsiMethod.class));
+            final List<PsiNameIdentifierOwner> psiElements =
+                    new ArrayList<>(ApplicationManager.getApplication().runReadAction((Computable<Collection<PsiMethod>>) () ->
+                            PsiTreeUtil.findChildrenOfType(psiFile, PsiMethod.class)));
 
-            for (final PsiMethod psiMethod : psiMethods)
+            psiElements.addAll(ApplicationManager.getApplication().runReadAction((Computable<Collection<PsiClass>>) () ->
+                    PsiTreeUtil.findChildrenOfType(psiFile, PsiClass.class)));
+
+            for (final PsiNameIdentifierOwner psiElement : psiElements)
             {
-                final String name = ApplicationManager.getApplication().runReadAction((Computable<String>) psiMethod::getName);
+                final String name = ApplicationManager.getApplication().runReadAction((Computable<String>) psiElement::getName);
 
                 final int lineNumber =
-                        ApplicationManager.getApplication().runReadAction((Computable<Integer>) () -> document.getLineNumber(psiMethod.getTextOffset()));
+                        ApplicationManager.getApplication().runReadAction((Computable<Integer>) () -> document.getLineNumber(psiElement.getTextOffset()));
                 final int lineEndOffset = document.getLineEndOffset(lineNumber);
                 final int lineNumberOfLineEndOffset = document.getLineNumber(lineEndOffset + 1);
 
@@ -60,12 +65,28 @@ public class PMDArtifactPoolToCodeMatcher implements IArtifactPoolToCodeMatcher
 
                 final AArtifact artifact = artifactPool.getArtifact(artifactIdentifier);
 
-                if (artifact != null)
+                if (artifact == null)
                 {
+                    continue;
+                }
+
+                if (psiElement instanceof PsiMethod)
+                {
+                    final PsiMethod psiMethod = (PsiMethod) psiElement;
                     PsiParameterList parameterList =
                             ApplicationManager.getApplication().runReadAction((Computable<PsiParameterList>) psiMethod::getParameterList);
                     artifact.setVisPsiElement(parameterList);
                     matchedArtifacts.add(artifact);
+                } else
+                {
+                    if (psiElement instanceof PsiClass)
+                    {
+                        final PsiClass psiClass = (PsiClass) psiElement;
+                        PsiReferenceList referenceList =
+                                ApplicationManager.getApplication().runReadAction((Computable<PsiReferenceList>) psiClass::getImplementsList);
+                        artifact.setVisPsiElement(referenceList);
+                        matchedArtifacts.add(artifact);
+                    }
                 }
             }
         }
