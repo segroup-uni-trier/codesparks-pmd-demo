@@ -4,7 +4,6 @@ import com.intellij.ui.paint.PaintUtil;
 import com.intellij.util.ui.UIUtil;
 import de.unitrier.st.codesparks.core.data.AArtifact;
 import de.unitrier.st.codesparks.core.visualization.AArtifactVisualizationLabelFactory;
-import de.unitrier.st.codesparks.core.visualization.DefaultArtifactVisualizationMouseListener;
 import de.unitrier.st.codesparks.core.visualization.VisConstants;
 import de.unitrier.st.codesparks.core.visualization.VisualizationUtil;
 import org.jetbrains.annotations.NotNull;
@@ -57,7 +56,7 @@ public class CycloArtifactVisualizationLabelFactory extends AArtifactVisualizati
         graphics.setColor(metricColor);
         VisualizationUtil.fillRectangle(graphics, artifactVisualizationArea);
         /*
-         * Draw the secondary metric
+         * Draw the secondary metric, if any
          */
         int selfWidth = 0;
 

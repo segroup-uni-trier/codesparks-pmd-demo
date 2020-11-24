@@ -47,9 +47,7 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
         assert plugin != null;
         final String pluginAbsolutePath = plugin.getPluginPath().toAbsolutePath().toString();
 
-
         final PMDConfiguration pmdConfiguration = new PMDConfiguration();
-//        pmdConfiguration.setInputPaths(projectPath);
         pmdConfiguration.setMinimumPriority(RulePriority.MEDIUM);
 
         final String pmdRulesPath = pluginAbsolutePath
@@ -61,8 +59,6 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
                 + "om-rules.xml";
 
         pmdConfiguration.setRuleSets(pmdRulesPath);
-//        pmdConfiguration.setRuleSets("rulesets/java/quickstart.xml");
-//        pmdConfiguration.setReportFormat("xml");
 
         final RuleSetFactory factory = RulesetsFactoryUtils.createFactory(pmdConfiguration);
 
@@ -102,34 +98,8 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
 
             PMD.processFiles(pmdConfiguration, factory, files, ctx, xmlRenderers);
 
-//            Report report = ctx.getReport();
-//            List<RuleViolation> violations = report.getViolations();
-//
-//            CodeSparksLogger.addText("Number of violations = " + violations.size());
-
             xmlRenderer.end();
             xmlRenderer.flush();
-
-//            System.out.println(stringWriter.toString());
-
-            /*
-            Alternatively hijack the pmd library to retrieve the metric values directly! For advanced purposes only!
-             */
-
-//            final RuleSetFactory ruleSetFactory = RulesetsFactoryUtils.defaultFactory();
-//            final RuleSet singleRuleRuleSet = ruleSetFactory.createSingleRuleRuleSet(new CycloRule());
-//
-//            for (final DataSource file : files)
-//            {
-//                final String realFileName = file.getNiceFileName(false, null);
-//                final LanguageVersion languageVersionOfFile = pmdConfiguration.getLanguageVersionOfFile(realFileName);
-//                final Parser parser = PMD.parserFor(languageVersionOfFile, pmdConfiguration);
-//                final InputStream sourceCode = new BufferedInputStream(file.getInputStream());
-//                final Reader streamReader = new InputStreamReader(sourceCode, pmdConfiguration.getSourceEncoding());
-//                final Node root = parser.parse(realFileName, streamReader);
-//                ctx.setLanguageVersion(languageVersionOfFile);
-//                singleRuleRuleSet.apply(Collections.singletonList(root), ctx);
-//            }
 
         } catch (IOException e)
         {
@@ -154,19 +124,11 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
             {
                 if (matcher.matches(path.getFileName()))
                 {
-//                    System.out.printf("Using %s%n", path);
                     files.add(new FileDataSource(path.toFile()));
                 }
-                /*
-                else
-                {
-                    System.out.printf("Ignoring %s%n", path);
-                }
-                */
                 return super.visitFile(path, attrs);
             }
         });
-//        System.out.printf("Analyzing %d files in %s%n", files.size(), basePath);
         return files;
     }
 
@@ -175,6 +137,7 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
     {
         final PMDArtifactPool pmdArtifactPool = new PMDArtifactPool();
 
+        //noinspection Convert2Lambda
         pmdArtifactPool.registerArtifactClassDisplayNameProvider(new IArtifactClassDisplayNameProvider()
         {
             @Override
@@ -252,8 +215,6 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
                     .get();
 
             pmdArtifactPool.addArtifact(artifact);
-
-//            pmdArtifactPool.add(artifact);
         }
 
         return pmdArtifactPool;

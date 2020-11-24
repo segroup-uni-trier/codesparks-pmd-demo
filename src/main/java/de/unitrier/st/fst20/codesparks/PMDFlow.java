@@ -24,8 +24,6 @@ public class PMDFlow extends ACodeSparksFlow implements PMDMetrics
         matcher = new PMDArtifactPoolToCodeMatcher();
 
         dataVisualizer = new DefaultDataVisualizer(new AArtifactVisualizationLabelFactory[]{
-//                new DummyArtifactVisualizationLabelFactory(),
-//                new DefaultArtifactVisualizationLabelFactory()
                 new CycloArtifactVisualizationLabelFactory(CYCLOMATIC_COMPLEXITY)
         });
 

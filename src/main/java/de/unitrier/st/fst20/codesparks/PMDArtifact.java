@@ -12,6 +12,6 @@ public class PMDArtifact extends AArtifact
     @Override
     public void navigate()
     {
-
+        // Not required for the fst'20 assignment.
     }
 }

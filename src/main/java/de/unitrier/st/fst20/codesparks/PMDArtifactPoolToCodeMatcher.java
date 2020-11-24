@@ -61,8 +61,6 @@ public class PMDArtifactPoolToCodeMatcher implements IArtifactPoolToCodeMatcher
 
                 final String artifactIdentifier = PMDArtifactUtil.getArtifactIdentifier(fileName, name, lineNumberOfLineEndOffset);
 
-//                System.out.println(artifactIdentifier);
-
                 final AArtifact artifact = artifactPool.getArtifact(artifactIdentifier);
 
                 if (artifact == null)
