@@ -2,9 +2,9 @@ package de.unitrier.st.fst20.codesparks;
 
 import com.intellij.ui.paint.PaintUtil;
 import com.intellij.util.ui.UIUtil;
-import de.unitrier.st.codesparks.core.CoreUtil;
 import de.unitrier.st.codesparks.core.data.AArtifact;
 import de.unitrier.st.codesparks.core.visualization.AArtifactVisualizationLabelFactory;
+import de.unitrier.st.codesparks.core.visualization.DefaultArtifactVisualizationMouseListener;
 import de.unitrier.st.codesparks.core.visualization.VisConstants;
 import de.unitrier.st.codesparks.core.visualization.VisualizationUtil;
 import org.jetbrains.annotations.NotNull;
@@ -35,7 +35,7 @@ public class CycloArtifactVisualizationLabelFactory extends AArtifactVisualizati
 
         Graphics graphics = bi.getGraphics();
 
-        Color backgroundColor = CoreUtil.getSelectedFileEditorBackgroundColor();
+        Color backgroundColor = VisualizationUtil.getSelectedFileEditorBackgroundColor();
 
         graphics.setColor(backgroundColor);
         graphics.fillRect(0, 0, bi.getWidth(), bi.getHeight());
@@ -57,17 +57,10 @@ public class CycloArtifactVisualizationLabelFactory extends AArtifactVisualizati
         graphics.setColor(metricColor);
         VisualizationUtil.fillRectangle(graphics, artifactVisualizationArea);
         /*
-         * Draw the self metric
+         * Draw the secondary metric
          */
-        // double log = Math.log(1 + ((Math.E - 1) * metricValueSelf / metricValue));
-        // int selfWidth = RECTANGLE_WIDTH * log;
         int selfWidth = 0;
 
-//        final double metricValueSelf = artifact.getMetricValueSelf();
-//        final double threadMetricValueSelfRatio = DataUtil.getThreadMetricValueRatio(artifact, ThreadArtifact::getMetricValueSelf);
-//        final double threadFilteredMetricValueSelf = metricValueSelf * threadMetricValueSelfRatio;
-
-//        graphics.setColor(VisualizationUtil.getBackgroundPerformanceColor(performanceColor, .1f));
         graphics.drawLine(X_OFFSET + selfWidth, 0, X_OFFSET + RECTANGLE_WIDTH, 0);
         graphics.drawLine(X_OFFSET + selfWidth, 0, X_OFFSET + RECTANGLE_WIDTH, 0);
         graphics.setColor(BORDER_COLOR);
@@ -97,13 +90,11 @@ public class CycloArtifactVisualizationLabelFactory extends AArtifactVisualizati
         BufferedImage subImage = bi.getSubimage(0, 0, actualIconWidth, bi.getHeight());
         ImageIcon imageIcon = new ImageIcon(subImage);
 
-//        artifactImageIconCache.put(artifact, imageIcon);
-
         JLabel jLabel = new JLabel();
         jLabel.setIcon(imageIcon);
 
         jLabel.setSize(imageIcon.getIconWidth(), imageIcon.getIconHeight());
-        //jLabel.addMouseListener(new DefaultArtifactVisualizationMouseListener(jLabel, artifact));
+//        jLabel.addMouseListener(new DefaultArtifactVisualizationMouseListener(jLabel, artifact, primaryMetricIdentifier, null));
 
         return jLabel;
     }

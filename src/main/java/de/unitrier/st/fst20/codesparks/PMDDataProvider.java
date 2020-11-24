@@ -9,6 +9,7 @@ import de.unitrier.st.codesparks.core.IArtifactPool;
 import de.unitrier.st.codesparks.core.IDataProvider;
 import de.unitrier.st.codesparks.core.data.AArtifact;
 import de.unitrier.st.codesparks.core.data.ArtifactBuilder;
+import de.unitrier.st.codesparks.core.logging.CodeSparksLogger;
 import de.unitrier.st.codesparks.core.service.ACodeSparksInstanceService;
 import net.sourceforge.pmd.*;
 import net.sourceforge.pmd.renderers.Renderer;
@@ -190,7 +191,7 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
         for (final RuleViolation ruleViolation : ruleViolations)
         {
             final String description = ruleViolation.getDescription();
-//            CodeSparksLogger.addText(description);
+            CodeSparksLogger.addText(description);
 
             final String packageName = ruleViolation.getPackageName();
             final String className = ruleViolation.getClassName();
