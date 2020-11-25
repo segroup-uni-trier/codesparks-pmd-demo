@@ -3,8 +3,8 @@ package de.unitrier.st.fst20.codesparks;
 import com.intellij.ui.paint.PaintUtil;
 import com.intellij.util.ui.UIUtil;
 import de.unitrier.st.codesparks.core.data.AArtifact;
+import de.unitrier.st.codesparks.core.data.IMetricIdentifier;
 import de.unitrier.st.codesparks.core.visualization.AArtifactVisualizationLabelFactory;
-import de.unitrier.st.codesparks.core.visualization.DefaultArtifactVisualizationMouseListener;
 import de.unitrier.st.codesparks.core.visualization.VisConstants;
 import de.unitrier.st.codesparks.core.visualization.VisualizationUtil;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +18,7 @@ import static de.unitrier.st.codesparks.core.visualization.VisConstants.*;
 
 public class CycloArtifactVisualizationLabelFactory extends AArtifactVisualizationLabelFactory
 {
-    protected CycloArtifactVisualizationLabelFactory(final String primaryMetricIdentifier)
+    protected CycloArtifactVisualizationLabelFactory(final IMetricIdentifier primaryMetricIdentifier)
     {
         super(primaryMetricIdentifier);
     }
@@ -69,7 +69,7 @@ public class CycloArtifactVisualizationLabelFactory extends AArtifactVisualizati
          * Draw the text
          */
 
-        String text = "Cyclo: " + metricValue;
+        String text = primaryMetricIdentifier.getDisplayString() + ": " + metricValue;
 
         double textWidth = graphics.getFontMetrics().stringWidth(text);
         graphics.setColor(BLACK);
