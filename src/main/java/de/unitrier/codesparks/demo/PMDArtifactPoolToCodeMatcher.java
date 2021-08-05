@@ -1,4 +1,4 @@
-package de.unitrier.st.fst20.codesparks;
+package de.unitrier.codesparks.demo;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
@@ -15,12 +15,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class PMDArtifactPoolToCodeMatcher implements IArtifactPoolToCodeMatcher
+final class PMDArtifactPoolToCodeMatcher implements IArtifactPoolToCodeMatcher
 {
     @Override
     public Collection<AArtifact> matchArtifactsToCodeFiles(final IArtifactPool artifactPool, final Project project, final VirtualFile... files)
     {
-        Collection<AArtifact> matchedArtifacts = new ArrayList<>();
+        final Collection<AArtifact> matchedArtifacts = new ArrayList<>();
         if (artifactPool == null)
         {
             return matchedArtifacts;
@@ -28,15 +28,15 @@ public class PMDArtifactPoolToCodeMatcher implements IArtifactPoolToCodeMatcher
 
         final PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
 
-        for (VirtualFile file : files)
+        for (final VirtualFile file : files)
         {
             final String canonicalPath = file.getCanonicalPath();
             assert canonicalPath != null;
 
             final String fileName = canonicalPath.replace('/', '\\');
 
-            PsiFile psiFile = ApplicationManager.getApplication().runReadAction((Computable<PsiFile>) () -> {
-                PsiManager psiManager = PsiManager.getInstance(project);
+            final PsiFile psiFile = ApplicationManager.getApplication().runReadAction((Computable<PsiFile>) () -> {
+                final PsiManager psiManager = PsiManager.getInstance(project);
                 return psiManager.findFile(file);
             });
 
@@ -61,8 +61,6 @@ public class PMDArtifactPoolToCodeMatcher implements IArtifactPoolToCodeMatcher
 
                 final String artifactIdentifier = PMDArtifactUtil.getArtifactIdentifier(fileName, name, lineNumberOfLineEndOffset);
 
-//                System.out.println(artifactIdentifier);
-
                 final AArtifact artifact = artifactPool.getArtifact(artifactIdentifier);
 
                 if (artifact == null)
@@ -73,7 +71,7 @@ public class PMDArtifactPoolToCodeMatcher implements IArtifactPoolToCodeMatcher
                 if (psiElement instanceof PsiMethod)
                 {
                     final PsiMethod psiMethod = (PsiMethod) psiElement;
-                    PsiParameterList parameterList =
+                    final PsiParameterList parameterList =
                             ApplicationManager.getApplication().runReadAction((Computable<PsiParameterList>) psiMethod::getParameterList);
                     artifact.setVisPsiElement(parameterList);
                     matchedArtifacts.add(artifact);
@@ -82,7 +80,7 @@ public class PMDArtifactPoolToCodeMatcher implements IArtifactPoolToCodeMatcher
                     if (psiElement instanceof PsiClass)
                     {
                         final PsiClass psiClass = (PsiClass) psiElement;
-                        PsiReferenceList referenceList =
+                        final PsiReferenceList referenceList =
                                 ApplicationManager.getApplication().runReadAction((Computable<PsiReferenceList>) psiClass::getImplementsList);
                         artifact.setVisPsiElement(referenceList);
                         matchedArtifacts.add(artifact);

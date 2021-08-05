@@ -1,13 +1,14 @@
 <idea-plugin>
-    <id>de.unitrier.st.fst20.codesparks.pmd.demo</id>
-    <name>FST'20 - CodeSparks</name>
+    <id>codesparks.pmd.demo</id>
+    <name>CodeSparks-PMD</name>
     <version>1.0</version>
     <!-- @formatter:off -->
     <vendor email="softwaretechnik@informatik.uni-trier.de" url="https://www.st.uni-trier.de">University of Trier - Software Engineering Group</vendor>
     <!-- @formatter:on -->
 
-    <!--description>
-    </description-->
+    <description>
+        This is a demo implementation of the CodeSparks framework.
+    </description>
 
     <!--change-notes>
     </change-notes-->
@@ -22,15 +23,15 @@
     <depends>com.intellij.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceInterface="de.unitrier.st.codesparks.core.service.ACodeSparksInstanceService"
-                            serviceImplementation="de.unitrier.st.fst20.codesparks.PMDInstanceService"
+        <applicationService serviceInterface="de.unitrier.st.codesparks.core.service.CodeSparksInstanceService"
+                            serviceImplementation="de.unitrier.codesparks.demo.PMDInstanceService"
         />
     </extensions>
 
     <actions>
         <!-- Add your actions here -->
         <action id="codesparks.start.flow"
-                class="de.unitrier.st.fst20.codesparks.StartPMDFlowAction"
+                class="de.unitrier.codesparks.demo.StartPMDFlowAction"
                 text="Start PMD Flow"
                 description="Start pmd flow"
                 icon="/icons/pmd_37x15.png"

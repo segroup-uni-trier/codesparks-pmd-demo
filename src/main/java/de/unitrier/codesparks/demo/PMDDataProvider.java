@@ -1,16 +1,12 @@
-package de.unitrier.st.fst20.codesparks;
+package de.unitrier.codesparks.demo;
 
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginManagerCore;
-import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.extensions.PluginId;
-import de.unitrier.st.codesparks.core.IArtifactClassDisplayNameProvider;
+import de.unitrier.st.codesparks.core.DefaultArtifactPool;
 import de.unitrier.st.codesparks.core.IArtifactPool;
 import de.unitrier.st.codesparks.core.IDataProvider;
 import de.unitrier.st.codesparks.core.data.AArtifact;
 import de.unitrier.st.codesparks.core.data.ArtifactBuilder;
 import de.unitrier.st.codesparks.core.logging.CodeSparksLogger;
-import de.unitrier.st.codesparks.core.service.ACodeSparksInstanceService;
+import de.unitrier.st.codesparks.core.service.CodeSparksInstanceService;
 import net.sourceforge.pmd.*;
 import net.sourceforge.pmd.renderers.Renderer;
 import net.sourceforge.pmd.renderers.XMLRenderer;
@@ -18,7 +14,9 @@ import net.sourceforge.pmd.stat.Metric;
 import net.sourceforge.pmd.util.datasource.DataSource;
 import net.sourceforge.pmd.util.datasource.FileDataSource;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
@@ -40,16 +38,10 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
     @Override
     public boolean collectData()
     {
-        final ACodeSparksInstanceService service = ServiceManager.getService(ACodeSparksInstanceService.class);
-        final String pluginIdString = service.getPluginIdString();
-        final PluginId id = PluginId.getId(pluginIdString);
-        final IdeaPluginDescriptor plugin = PluginManagerCore.getPlugin(id);
-        assert plugin != null;
-        final String pluginAbsolutePath = plugin.getPluginPath().toAbsolutePath().toString();
-
+        final CodeSparksInstanceService service = CodeSparksInstanceService.getInstance();
+        final String pluginAbsolutePath = service.getPluginPath().toAbsolutePath().toString();
 
         final PMDConfiguration pmdConfiguration = new PMDConfiguration();
-//        pmdConfiguration.setInputPaths(projectPath);
         pmdConfiguration.setMinimumPriority(RulePriority.MEDIUM);
 
         final String pmdRulesPath = pluginAbsolutePath
@@ -58,20 +50,15 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
                 + File.separator
                 + "pmd"
                 + File.separator
-                + "om-rules.xml";
+                + "codesparks-pmd-demo.xml";
 
         pmdConfiguration.setRuleSets(pmdRulesPath);
-//        pmdConfiguration.setRuleSets("rulesets/java/quickstart.xml");
-//        pmdConfiguration.setReportFormat("xml");
 
         final RuleSetFactory factory = RulesetsFactoryUtils.createFactory(pmdConfiguration);
-
         try
         {
             final List<DataSource> files = determineFiles(projectPath + File.separator + "src");
-
             final RuleContext ctx = new RuleContext();
-
             ctx.getReport().addListener(new ThreadSafeReportListener()
             {
                 @Override
@@ -92,7 +79,6 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
             });
 
             final StringWriter stringWriter = new StringWriter();
-
             final XMLRenderer xmlRenderer = new XMLRenderer("UTF-8");
 
             xmlRenderer.setWriter(stringWriter);
@@ -102,15 +88,8 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
 
             PMD.processFiles(pmdConfiguration, factory, files, ctx, xmlRenderers);
 
-//            Report report = ctx.getReport();
-//            List<RuleViolation> violations = report.getViolations();
-//
-//            CodeSparksLogger.addText("Number of violations = " + violations.size());
-
             xmlRenderer.end();
             xmlRenderer.flush();
-
-//            System.out.println(stringWriter.toString());
 
             /*
             Alternatively hijack the pmd library to retrieve the metric values directly! For advanced purposes only!
@@ -130,64 +109,45 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
 //                ctx.setLanguageVersion(languageVersionOfFile);
 //                singleRuleRuleSet.apply(Collections.singletonList(root), ctx);
 //            }
-
         } catch (IOException e)
         {
             e.printStackTrace();
             return false;
         }
-
         return true;
     }
 
     private static List<DataSource> determineFiles(final String basePath) throws IOException
     {
-        Path dirPath = FileSystems.getDefault().getPath(basePath);
-        PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:*.java");
-
-        List<DataSource> files = new ArrayList<>();
-
-        Files.walkFileTree(dirPath, new SimpleFileVisitor<Path>()
+        final Path dirPath = FileSystems.getDefault().getPath(basePath);
+        final PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:*.java");
+        final List<DataSource> files = new ArrayList<>();
+        Files.walkFileTree(dirPath, new SimpleFileVisitor<>()
         {
             @Override
             public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException
             {
                 if (matcher.matches(path.getFileName()))
                 {
-//                    System.out.printf("Using %s%n", path);
                     files.add(new FileDataSource(path.toFile()));
                 }
-                /*
-                else
-                {
-                    System.out.printf("Ignoring %s%n", path);
-                }
-                */
                 return super.visitFile(path, attrs);
             }
         });
-//        System.out.printf("Analyzing %d files in %s%n", files.size(), basePath);
         return files;
     }
 
     @Override
     public IArtifactPool processData()
     {
-        final PMDArtifactPool pmdArtifactPool = new PMDArtifactPool();
-
-        pmdArtifactPool.registerArtifactClassDisplayNameProvider(new IArtifactClassDisplayNameProvider()
-        {
-            @Override
-            public String getDisplayName(Class<? extends AArtifact> artifactClass)
+        final IArtifactPool pmdArtifactPool = new DefaultArtifactPool();
+        pmdArtifactPool.registerArtifactClassDisplayNameProvider(artifactClass -> {
+            if (artifactClass.equals(PMDArtifact.class))
             {
-                if (artifactClass.equals(PMDArtifact.class))
-                {
-                    return "PMD Cyclo";
-                }
-                return artifactClass.getSimpleName();
+                return "PMD artifacts";
             }
+            return artifactClass.getSimpleName();
         });
-
         for (final RuleViolation ruleViolation : ruleViolations)
         {
             final String description = ruleViolation.getDescription();
@@ -243,19 +203,14 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
                 // ignored
             }
 
-            final ArtifactBuilder artifactBuilder = new ArtifactBuilder(name, artifactIdentifier, PMDArtifact.class);
-
+            final ArtifactBuilder artifactBuilder = new ArtifactBuilder(artifactIdentifier, name, PMDArtifact.class);
             final AArtifact artifact = artifactBuilder
                     .setFileName(filename)
                     .setLineNumber(beginLine)
                     .setNumericMetricValue(CYCLOMATIC_COMPLEXITY, value)
                     .get();
-
             pmdArtifactPool.addArtifact(artifact);
-
-//            pmdArtifactPool.add(artifact);
         }
-
         return pmdArtifactPool;
     }
 }

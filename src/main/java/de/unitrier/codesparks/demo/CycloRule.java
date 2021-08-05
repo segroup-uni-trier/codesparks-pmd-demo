@@ -1,4 +1,4 @@
-package de.unitrier.st.fst20.codesparks;
+package de.unitrier.codesparks.demo;
 
 import de.unitrier.st.codesparks.core.logging.CodeSparksLogger;
 import net.sourceforge.pmd.lang.java.ast.ASTConstructorDeclaration;

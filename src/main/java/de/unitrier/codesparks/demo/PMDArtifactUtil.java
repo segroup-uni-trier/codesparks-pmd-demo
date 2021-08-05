@@ -1,4 +1,4 @@
-package de.unitrier.st.fst20.codesparks;
+package de.unitrier.codesparks.demo;
 
 final class PMDArtifactUtil
 {

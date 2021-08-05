@@ -5,7 +5,7 @@
 
     <!-- Ivy -->
 
-    <property name="ivy.install.version" value="2.4.0"/>
+    <property name="ivy.install.version" value="2.5.0"/>
     <property name="ivy.jar.dir" value="${user.home}/.ivy2"/>
     <property name="ivy.jar.file" value="ivy-${ivy.install.version}.jar"/>
     <property name="ivy.jar.path" value="${ivy.jar.dir}/${ivy.jar.file}"/>

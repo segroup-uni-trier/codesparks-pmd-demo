@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<ruleset name="om-rules"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+
+    <description>
+        CodeSparks PMD demo
+    </description>
+
+    <!-- Your rules will come here -->
+
+    <rule ref="category/java/design.xml/CyclomaticComplexity">
+        <properties>
+            <property name="classReportLevel" value="1"/>
+            <property name="methodReportLevel" value="1"/>
+            <property name="cycloOptions" value=""/>
+        </properties>
+    </rule>
+
+</ruleset>
