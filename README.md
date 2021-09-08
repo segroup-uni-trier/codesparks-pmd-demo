@@ -1,1 +1,1 @@
-# fst20-moseler-codesparks-pmd-demo
+# codesparks-pmd-demo
