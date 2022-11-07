@@ -7,8 +7,8 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
-import de.unitrier.st.codesparks.core.IArtifactPool;
-import de.unitrier.st.codesparks.core.IArtifactPoolToCodeMatcher;
+import de.unitrier.st.codesparks.core.data.IArtifactPool;
+import de.unitrier.st.codesparks.core.matching.IArtifactPoolToCodeMatcher;
 import de.unitrier.st.codesparks.core.data.AArtifact;
 
 import java.util.ArrayList;

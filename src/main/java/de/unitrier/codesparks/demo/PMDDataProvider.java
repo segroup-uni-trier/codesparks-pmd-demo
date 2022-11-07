@@ -1,7 +1,7 @@
 package de.unitrier.codesparks.demo;
 
-import de.unitrier.st.codesparks.core.DefaultArtifactPool;
-import de.unitrier.st.codesparks.core.IArtifactPool;
+import de.unitrier.st.codesparks.core.data.DefaultArtifactPool;
+import de.unitrier.st.codesparks.core.data.IArtifactPool;
 import de.unitrier.st.codesparks.core.IDataProvider;
 import de.unitrier.st.codesparks.core.data.AArtifact;
 import de.unitrier.st.codesparks.core.data.ArtifactBuilder;
@@ -22,6 +22,9 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 final class PMDDataProvider implements IDataProvider, PMDMetrics
 {
@@ -142,9 +145,13 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
     {
         final IArtifactPool pmdArtifactPool = new DefaultArtifactPool();
         pmdArtifactPool.registerArtifactClassDisplayNameProvider(artifactClass -> {
-            if (artifactClass.equals(PMDArtifact.class))
+            if (artifactClass.equals(PMDMethodArtifact.class))
             {
-                return "PMD artifacts";
+                return "PMD method artifacts";
+            }
+            if (artifactClass.equals(PMDClassArtifact.class))
+            {
+                return "PMD class artifacts";
             }
             return artifactClass.getSimpleName();
         });
@@ -160,11 +167,12 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
             final String filename = ruleViolation.getFilename();
 
             String name = packageName + "." + className;
-            if (!"".equals(methodName))
-            {
-                name += "." + methodName;
-            }
+//            if (!"".equals(methodName))
+//            {
+//                name += "." + methodName;
+//            }
 
+            boolean isClass = true;
             final String idName;
             if ("".equals(methodName))
             {
@@ -172,6 +180,8 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
             } else
             {
                 idName = methodName;
+                name += "." + methodName;
+                isClass = false;
             }
 
             final String artifactIdentifier = PMDArtifactUtil.getArtifactIdentifier(filename, idName, beginLine);
@@ -189,22 +199,39 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
                 }
             }
 
-            if (metricValue.endsWith("."))
+
+            final int lastIndexOf = metricValue.lastIndexOf(".");
+            if (lastIndexOf > 0)
             {
-                metricValue = metricValue.substring(0, 1);
+                metricValue = metricValue.substring(0, lastIndexOf);
             }
 
-            int value = -1;
+//            if (metricValue.endsWith("."))
+//            {
+//                metricValue = metricValue.substring(0, 1);
+//            }
+
+            int value;
             try
             {
                 value = Integer.parseInt(metricValue);
             } catch (NumberFormatException e)
             {
-                // ignored
+                CodeSparksLogger.addText("Could not parse metric value to integer: %s", e.getMessage());
+                continue;
             }
 
-            final ArtifactBuilder artifactBuilder = new ArtifactBuilder(artifactIdentifier, name, PMDArtifact.class);
-            final AArtifact artifact = artifactBuilder
+            final Class<? extends AArtifact> cls;
+            if (isClass)
+            {
+                cls = PMDClassArtifact.class;
+            } else
+            {
+                cls = PMDMethodArtifact.class;
+            }
+
+            ArtifactBuilder artifactBuilder = new ArtifactBuilder(artifactIdentifier, name, cls);
+            AArtifact artifact = artifactBuilder
                     .setFileName(filename)
                     .setLineNumber(beginLine)
                     .setNumericMetricValue(CYCLOMATIC_COMPLEXITY, value)
@@ -212,5 +239,38 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
             pmdArtifactPool.addArtifact(artifact);
         }
         return pmdArtifactPool;
+    }
+
+    @Override
+    public void postProcess(IArtifactPool artifactPool)
+    {
+        final List<AArtifact> classArtifacts = artifactPool.getArtifacts(PMDClassArtifact.class);
+        final List<Double> cycloValues =
+                classArtifacts.stream().map(artifact -> artifact.getNumericalMetricValue(CYCLOMATIC_COMPLEXITY)).collect(Collectors.toList());
+        final Optional<Double> reduce = cycloValues.stream().reduce(Double::sum);
+        if (reduce.isPresent())
+        {
+            final int nrOfClassArtifacts = classArtifacts.size();
+            final Double sum = reduce.get();
+            final double expectancyValue = sum / nrOfClassArtifacts; // Also the arithmetic average (mean).
+
+
+
+            double quadSum = 0D;
+            for (final Double cycloValue : cycloValues)
+            {
+                quadSum += (cycloValue - expectancyValue) * (cycloValue - expectancyValue);
+            }
+            double standardDeviation = Math.sqrt(quadSum / nrOfClassArtifacts);
+
+
+            classArtifacts.forEach(artifact -> {
+                artifact.setNumericalMetricValue(CYCLO_MEAN, expectancyValue);
+                artifact.setNumericalMetricValue(CYCLO_SD, standardDeviation);
+            });
+
+        }
+
+
     }
 }
