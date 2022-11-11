@@ -23,6 +23,11 @@ final class CycloArtifactVisualizationLabelFactory extends AArtifactVisualizatio
         super(primaryMetricIdentifier);
     }
 
+    CycloArtifactVisualizationLabelFactory(final AMetricIdentifier primaryMetricIdentifier, final Class<?>... artifactClasses)
+    {
+        super(primaryMetricIdentifier, artifactClasses);
+    }
+
     // https://colorbrewer2.org/#type=sequential&scheme=PuRd&n=4
     private static final Color SIMPLE_COLOR = Color.decode("#feebe2");
     private static final Color MORE_COMPLEX_COLOR = Color.decode("#fbb4b9");
@@ -135,9 +140,6 @@ final class CycloArtifactVisualizationLabelFactory extends AArtifactVisualizatio
 
         final JLabel jLabel = makeLabel(graphics);
         final Toolkit toolkit = jLabel.getToolkit();
-        //jLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-//        final URL resource = getClass().getResource("/icons/question-mark.png");
-//        final String resourceString = "/icons/question-mark-512.png";
         final String resourceString = "/icons/question-256-flip-filled.png";
         final URL resource = getClass().getResource(resourceString);
         if (resource != null)

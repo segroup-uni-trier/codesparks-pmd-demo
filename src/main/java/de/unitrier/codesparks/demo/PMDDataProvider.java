@@ -1,10 +1,10 @@
 package de.unitrier.codesparks.demo;
 
-import de.unitrier.st.codesparks.core.data.DefaultArtifactPool;
-import de.unitrier.st.codesparks.core.data.IArtifactPool;
 import de.unitrier.st.codesparks.core.IDataProvider;
 import de.unitrier.st.codesparks.core.data.AArtifact;
 import de.unitrier.st.codesparks.core.data.ArtifactBuilder;
+import de.unitrier.st.codesparks.core.data.DefaultArtifactPool;
+import de.unitrier.st.codesparks.core.data.IArtifactPool;
 import de.unitrier.st.codesparks.core.logging.CodeSparksLogger;
 import de.unitrier.st.codesparks.core.service.CodeSparksInstanceService;
 import net.sourceforge.pmd.*;
@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 final class PMDDataProvider implements IDataProvider, PMDMetrics
 {
@@ -188,36 +187,30 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
 
             final String[] s = description.split(" ");
 
-            String metricValue = "n/a";
+            String metricValueString = "n/a";
             for (int i = 0; i < s.length; i++)
             {
                 String str = s[i];
                 if ("of".equals(str))
                 {
-                    metricValue = s[i + 1];
+                    metricValueString = s[i + 1];
                     break;
                 }
             }
 
-
-            final int lastIndexOf = metricValue.lastIndexOf(".");
+            final int lastIndexOf = metricValueString.lastIndexOf(".");
             if (lastIndexOf > 0)
             {
-                metricValue = metricValue.substring(0, lastIndexOf);
+                metricValueString = metricValueString.substring(0, lastIndexOf);
             }
 
-//            if (metricValue.endsWith("."))
-//            {
-//                metricValue = metricValue.substring(0, 1);
-//            }
-
-            int value;
+            int metricValue;
             try
             {
-                value = Integer.parseInt(metricValue);
+                metricValue = Integer.parseInt(metricValueString);
             } catch (NumberFormatException e)
             {
-                CodeSparksLogger.addText("Could not parse metric value to integer: %s", e.getMessage());
+                CodeSparksLogger.addText("Could not parse metric metricValue to integer: %s", e.getMessage());
                 continue;
             }
 
@@ -234,7 +227,7 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
             AArtifact artifact = artifactBuilder
                     .setFileName(filename)
                     .setLineNumber(beginLine)
-                    .setNumericMetricValue(CYCLOMATIC_COMPLEXITY, value)
+                    .setNumericMetricValue(CYCLOMATIC_COMPLEXITY, metricValue)
                     .get();
             pmdArtifactPool.addArtifact(artifact);
         }
@@ -242,7 +235,7 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
     }
 
     @Override
-    public void postProcess(IArtifactPool artifactPool)
+    public void postProcess(final IArtifactPool artifactPool)
     {
         final List<AArtifact> classArtifacts = artifactPool.getArtifacts(PMDClassArtifact.class);
         final List<Double> cycloValues =
@@ -253,9 +246,7 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
             final int nrOfClassArtifacts = classArtifacts.size();
             final Double sum = reduce.get();
             final double expectancyValue = sum / nrOfClassArtifacts; // Also the arithmetic average (mean).
-
-
-
+            
             double quadSum = 0D;
             for (final Double cycloValue : cycloValues)
             {
@@ -263,14 +254,10 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
             }
             double standardDeviation = Math.sqrt(quadSum / nrOfClassArtifacts);
 
-
             classArtifacts.forEach(artifact -> {
                 artifact.setNumericalMetricValue(CYCLO_MEAN, expectancyValue);
                 artifact.setNumericalMetricValue(CYCLO_SD, standardDeviation);
             });
-
         }
-
-
     }
 }

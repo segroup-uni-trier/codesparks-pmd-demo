@@ -6,8 +6,6 @@ import de.unitrier.st.codesparks.core.logging.CodeSparksLogger;
 
 abstract class PMDArtifact extends AArtifact
 {
-    protected boolean isClass;
-
     PMDArtifact(final String identifier, final String name)
     {
         super(identifier, name);
@@ -18,7 +16,6 @@ abstract class PMDArtifact extends AArtifact
     {
         if (!super.navigate())
         {
-            //return JavaArtifactNavigationUtil.navigateToLineInClass(name, lineNumber);
             final boolean navigate = JavaArtifactNavigationUtil.navigateToLineInFile(fileName, lineNumber);
             if (!navigate)
             {

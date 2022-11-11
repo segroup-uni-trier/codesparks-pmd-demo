@@ -21,7 +21,8 @@ public class PMDFlow extends ACodeSparksFlow implements PMDMetrics
 
         final ArtifactMetricComparator artifactMetricComparator = new ArtifactMetricComparator(CYCLOMATIC_COMPLEXITY, true);
 
-        final CycloArtifactVisualizationLabelFactory cycloArtifactVisualizationLabelFactory = new CycloArtifactVisualizationLabelFactory(CYCLOMATIC_COMPLEXITY);
+        final CycloArtifactVisualizationLabelFactory cycloArtifactVisualizationLabelFactory =
+                new CycloArtifactVisualizationLabelFactory(CYCLOMATIC_COMPLEXITY, PMDClassArtifact.class, PMDMethodArtifact.class);
 
         registerArtifactMetricComparatorForSorting(PMDMethodArtifact.class, artifactMetricComparator);
         registerArtifactMetricComparatorForSorting(PMDClassArtifact.class, artifactMetricComparator);
@@ -40,6 +41,5 @@ public class PMDFlow extends ACodeSparksFlow implements PMDMetrics
         dataVisualizer = new DefaultDataVisualizer(new AArtifactVisualizationLabelFactory[]{
                 cycloArtifactVisualizationLabelFactory
         });
-
     }
 }
