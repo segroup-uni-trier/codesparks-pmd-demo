@@ -1,9 +1,12 @@
 package de.unitrier.codesparks.demo;
 
-import de.unitrier.st.codesparks.core.CoreUtil;
-import de.unitrier.st.codesparks.core.data.*;
+import de.unitrier.st.codesparks.core.data.AArtifact;
+import de.unitrier.st.codesparks.core.data.AMetricIdentifier;
 import de.unitrier.st.codesparks.core.logging.CodeSparksLogger;
-import de.unitrier.st.codesparks.core.visualization.*;
+import de.unitrier.st.codesparks.core.visualization.AArtifactVisualizationLabelFactory;
+import de.unitrier.st.codesparks.core.visualization.CodeSparksGraphics;
+import de.unitrier.st.codesparks.core.visualization.VisConstants;
+import de.unitrier.st.codesparks.core.visualization.VisualizationUtil;
 import de.unitrier.st.codesparks.java.JavaUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -77,43 +80,37 @@ final class CycloArtifactVisualizationLabelFactory extends AArtifactVisualizatio
             final double cycloMean = artifact.getNumericalMetricValue(PMDMetrics.CYCLO_MEAN);
             final double cycloSD = artifact.getNumericalMetricValue(PMDMetrics.CYCLO_SD);
 
-//            final String scope = "with respect to artifacts of the same level of abstraction in the project";
-
             final String explanation = "sum of methods";
             final String scope = "compared to other classes in the project";
             double lowThreshold = cycloMean - cycloSD;
-            double highThreshold = cycloMean + cycloMean;
-            double veryHighThreshold = (cycloMean + cycloMean) * 1.5;
+            double highThreshold = cycloMean + cycloSD;
+            double veryHighThreshold = (cycloMean + cycloSD) * 1.5;
 
-            final String stat = "mean=" +
-                    CoreUtil.roundAndFormatToDigitsAfterComma(cycloMean, 2) +
-                    ", sd=" +
-                    CoreUtil.roundAndFormatToDigitsAfterComma(cycloSD, 2);
+//            final String stat = "mean=" +
+//                    CoreUtil.roundAndFormatToDigitsAfterComma(cycloMean, 2) +
+//                    ", sd=" +
+//                    CoreUtil.roundAndFormatToDigitsAfterComma(cycloSD, 2);
 
             final String interpretation;
             if (metricValue < lowThreshold)
             {
                 metricColor = SIMPLE_COLOR;
                 interpretation = "Low";
-//                toolTipText += "Less than " + CoreUtil.formatToDigitsAfterComma(lowThreshold, 2) + " (mean-sd";
             } else
             {
                 if (metricValue < highThreshold)
                 {
                     metricColor = MORE_COMPLEX_COLOR;
-//                    toolTipText += "Less than " + CoreUtil.formatToDigitsAfterComma(highThreshold, 2) + " (mean+sd";
                     interpretation = "Average";
                 } else
                 {
                     if (metricValue < veryHighThreshold)
                     {
                         metricColor = COMPLEX_COLOR;
-//                        toolTipText += "Less than " + CoreUtil.formatToDigitsAfterComma(veryHighThreshold, 2) + " ((mean+sd)*1.5";
                         interpretation = "High";
                     } else
                     {
                         metricColor = UNTESTABLE_COLOR;
-//                        toolTipText += "Higher than " + CoreUtil.formatToDigitsAfterComma(veryHighThreshold, 2) + " ((mean+sd)*1.5";
                         interpretation = "Very high";
                     }
                 }
