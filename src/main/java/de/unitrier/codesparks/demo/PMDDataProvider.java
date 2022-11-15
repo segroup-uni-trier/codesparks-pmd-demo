@@ -93,25 +93,6 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
             xmlRenderer.end();
             xmlRenderer.flush();
 
-            /*
-             * Alternative way to retrieve the metric values directly from PMD. For advanced purposes only!
-             * See also class CycloRule.
-             */
-
-//            final RuleSetFactory ruleSetFactory = RulesetsFactoryUtils.defaultFactory();
-//            final RuleSet singleRuleRuleSet = ruleSetFactory.createSingleRuleRuleSet(new CycloRule());
-//
-//            for (final DataSource file : files)
-//            {
-//                final String realFileName = file.getNiceFileName(false, null);
-//                final LanguageVersion languageVersionOfFile = pmdConfiguration.getLanguageVersionOfFile(realFileName);
-//                final Parser parser = PMD.parserFor(languageVersionOfFile, pmdConfiguration);
-//                final InputStream sourceCode = new BufferedInputStream(file.getInputStream());
-//                final Reader streamReader = new InputStreamReader(sourceCode, pmdConfiguration.getSourceEncoding());
-//                final Node root = parser.parse(realFileName, streamReader);
-//                ctx.setLanguageVersion(languageVersionOfFile);
-//                singleRuleRuleSet.apply(Collections.singletonList(root), ctx);
-//            }
         } catch (IOException e)
         {
             CodeSparksLogger.addText("%s: IO exception %s.", getClass().getName(), e.getMessage());

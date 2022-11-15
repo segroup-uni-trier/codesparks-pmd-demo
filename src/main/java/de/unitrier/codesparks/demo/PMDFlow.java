@@ -52,7 +52,6 @@ public class PMDFlow extends ACodeSparksFlow implements PMDMetrics
 
         dataProvider = new PMDDataProvider(basePath);
 
-//        matcher = new PMDArtifactPoolToCodeMatcher();
         matcher = new FileAndLineBasedJavaArtifactPoolToCodeMatcher();
 
         dataVisualizer = new DefaultDataVisualizer(new AArtifactVisualizationLabelFactory[]{
