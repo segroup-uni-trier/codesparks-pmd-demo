@@ -27,6 +27,7 @@ final class PMDArtifactPoolToCodeMatcher implements IArtifactPoolToCodeMatcher
         }
 
         final PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
+        final PsiManager psiManager = PsiManager.getInstance(project);
 
         for (final VirtualFile file : files)
         {
@@ -35,10 +36,7 @@ final class PMDArtifactPoolToCodeMatcher implements IArtifactPoolToCodeMatcher
 
             final String fileName = canonicalPath.replace('/', '\\');
 
-            final PsiFile psiFile = ApplicationManager.getApplication().runReadAction((Computable<PsiFile>) () -> {
-                final PsiManager psiManager = PsiManager.getInstance(project);
-                return psiManager.findFile(file);
-            });
+            final PsiFile psiFile = ApplicationManager.getApplication().runReadAction((Computable<PsiFile>) () -> psiManager.findFile(file));
 
             final Document document = documentManager.getDocument(psiFile);
             assert document != null;

@@ -29,7 +29,7 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
 {
     private final String projectPath;
 
-    public PMDDataProvider(String projectPath)
+    public PMDDataProvider(final String projectPath)
     {
         this.projectPath = projectPath;
         this.ruleViolations = new ArrayList<>();
@@ -94,7 +94,8 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
             xmlRenderer.flush();
 
             /*
-            Alternatively hijack the pmd library to retrieve the metric values directly! For advanced purposes only!
+             * Alternative way to retrieve the metric values directly from PMD. For advanced purposes only!
+             * See also class CycloRule.
              */
 
 //            final RuleSetFactory ruleSetFactory = RulesetsFactoryUtils.defaultFactory();
@@ -113,7 +114,7 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
 //            }
         } catch (IOException e)
         {
-            e.printStackTrace();
+            CodeSparksLogger.addText("%s: IO exception %s.", getClass().getName(), e.getMessage());
             return false;
         }
         return true;
@@ -143,94 +144,68 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
     public IArtifactPool processData()
     {
         final IArtifactPool pmdArtifactPool = new DefaultArtifactPool();
-        pmdArtifactPool.registerArtifactClassDisplayNameProvider(artifactClass -> {
-            if (artifactClass.equals(PMDMethodArtifact.class))
-            {
-                return "PMD method artifacts";
-            }
-            if (artifactClass.equals(PMDClassArtifact.class))
-            {
-                return "PMD class artifacts";
-            }
-            return artifactClass.getSimpleName();
-        });
+
         for (final RuleViolation ruleViolation : ruleViolations)
         {
-            final String description = ruleViolation.getDescription();
-            CodeSparksLogger.addText(description);
-
-            final String packageName = ruleViolation.getPackageName();
-            final String className = ruleViolation.getClassName();
-            final String methodName = ruleViolation.getMethodName();
-            final int beginLine = ruleViolation.getBeginLine();
-            final String filename = ruleViolation.getFilename();
-
-            String name = packageName + "." + className;
-//            if (!"".equals(methodName))
-//            {
-//                name += "." + methodName;
-//            }
-
-            boolean isClass = true;
-            final String idName;
-            if ("".equals(methodName))
+            final Rule rule = ruleViolation.getRule();
+            final String ruleName = rule.getName();
+            if ("CyclomaticComplexity".equals(ruleName))
             {
-                idName = className;
-            } else
-            {
-                idName = methodName;
-                name += "." + methodName;
-                isClass = false;
-            }
+                final String packageName = ruleViolation.getPackageName();
+                final String className = ruleViolation.getClassName();
+                final String methodName = ruleViolation.getMethodName();
 
-            final String artifactIdentifier = PMDArtifactUtil.getArtifactIdentifier(filename, idName, beginLine);
+                String artifactDisplayName = packageName + "." + className;
 
-            final String[] s = description.split(" ");
-
-            String metricValueString = "n/a";
-            for (int i = 0; i < s.length; i++)
-            {
-                String str = s[i];
-                if ("of".equals(str))
+                final Class<? extends AArtifact> artifactClass;
+                boolean isClass = false;
+                final String artifactName;
+                if ("".equals(methodName))
                 {
-                    metricValueString = s[i + 1];
-                    break;
+                    artifactName = className;
+                    artifactClass = PMDClassArtifact.class;
+                    isClass = true;
+                } else
+                {
+                    artifactName = methodName;
+                    artifactClass = PMDMethodArtifact.class;
+                    artifactDisplayName += "." + methodName;
                 }
-            }
 
-            final int lastIndexOf = metricValueString.lastIndexOf(".");
-            if (lastIndexOf > 0)
-            {
-                metricValueString = metricValueString.substring(0, lastIndexOf);
-            }
+                final int beginLine = ruleViolation.getBeginLine();
+                final String filename = ruleViolation.getFilename();
+                final String artifactIdentifier = PMDArtifactUtil.getArtifactIdentifier(filename, artifactName, beginLine);
+                final ArtifactBuilder artifactBuilder = new ArtifactBuilder(artifactIdentifier, artifactDisplayName, artifactClass);
+                final AArtifact artifact = artifactBuilder
+                        .setFileName(filename)
+                        .setLineNumber(beginLine)
+                        .get();
 
-            int metricValue;
-            try
-            {
-                metricValue = Integer.parseInt(metricValueString);
-            } catch (NumberFormatException e)
-            {
-                CodeSparksLogger.addText("Could not parse metric metricValue to integer: %s", e.getMessage());
-                continue;
-            }
+                final String description = ruleViolation.getDescription();
+                final String[] split = description.split(" ");
 
-            final Class<? extends AArtifact> cls;
-            if (isClass)
-            {
-                cls = PMDClassArtifact.class;
-            } else
-            {
-                cls = PMDMethodArtifact.class;
-            }
+                int metricValueIndex;
+                if (isClass)
+                {
+                    metricValueIndex = 3;
+                    String maxOfClass = split[split.length - 1];
+                    maxOfClass = getSubStringUntilLastOf(maxOfClass, ")");
+                    final Double maxOfClassValue = parseMetricValue(maxOfClass);
+                    artifact.setNumericalMetricValue(CYCLO_MAX_OF_CLASS, maxOfClassValue);
+                } else
+                { // Methods
+                    metricValueIndex = 1;
+                }
 
-            ArtifactBuilder artifactBuilder = new ArtifactBuilder(artifactIdentifier, name, cls);
-            AArtifact artifact = artifactBuilder
-                    .setFileName(filename)
-                    .setLineNumber(beginLine)
-                    .setNumericMetricValue(CYCLOMATIC_COMPLEXITY, metricValue)
-                    .get();
-            pmdArtifactPool.addArtifact(artifact);
+                String metricValueString = split[split.length - metricValueIndex];
+                metricValueString = getSubStringUntilLastOf(metricValueString, ".");
+                double metricValue = parseMetricValue(metricValueString);
+
+                artifact.setNumericalMetricValue(CYCLOMATIC_COMPLEXITY, metricValue);
+                pmdArtifactPool.addArtifact(artifact);
+            }
         }
+
         return pmdArtifactPool;
     }
 
@@ -246,7 +221,7 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
             final int nrOfClassArtifacts = classArtifacts.size();
             final Double sum = reduce.get();
             final double expectancyValue = sum / nrOfClassArtifacts; // Also the arithmetic average (mean).
-            
+
             double quadSum = 0D;
             for (final Double cycloValue : cycloValues)
             {
@@ -258,6 +233,32 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
                 artifact.setNumericalMetricValue(CYCLO_MEAN, expectancyValue);
                 artifact.setNumericalMetricValue(CYCLO_SD, standardDeviation);
             });
+        }
+    }
+
+    /*
+     * Minor helpers.
+     */
+
+    private String getSubStringUntilLastOf(final String str, final String delimiter)
+    {
+        final int lastIndexOf = str.lastIndexOf(delimiter);
+        if (lastIndexOf > 0)
+        {
+            return str.substring(0, lastIndexOf);
+        }
+        return str;
+    }
+
+    private Double parseMetricValue(final String metricValueString)
+    {
+        try
+        {
+            return Double.parseDouble(metricValueString);
+        } catch (NumberFormatException e)
+        {
+            CodeSparksLogger.addText("Could not parse metric metricValue to double: %s", e.getMessage());
+            return Double.NaN;
         }
     }
 }

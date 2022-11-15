@@ -1,11 +1,10 @@
 package de.unitrier.codesparks.demo;
 
-import de.unitrier.st.codesparks.core.data.AMetricIdentifier;
 import de.unitrier.st.codesparks.core.data.ANumericMetricIdentifier;
 
 public interface PMDMetrics
 {
-    AMetricIdentifier CYCLOMATIC_COMPLEXITY = new ANumericMetricIdentifier()
+    ANumericMetricIdentifier CYCLOMATIC_COMPLEXITY = new ANumericMetricIdentifier()
     {
         @Override
         public String getIdentifier()
@@ -38,7 +37,7 @@ public interface PMDMetrics
         }
     };
 
-    AMetricIdentifier CYCLO_MEAN = new ANumericMetricIdentifier() {
+    ANumericMetricIdentifier CYCLO_MEAN = new ANumericMetricIdentifier() {
         @Override
         public String getIdentifier()
         {
@@ -70,7 +69,7 @@ public interface PMDMetrics
         }
     };
 
-    AMetricIdentifier CYCLO_SD = new ANumericMetricIdentifier() {
+    ANumericMetricIdentifier CYCLO_SD = new ANumericMetricIdentifier() {
         @Override
         public String getIdentifier()
         {
@@ -93,6 +92,38 @@ public interface PMDMetrics
         public String getShortDisplayString()
         {
             return "Cyclo-SD";
+        }
+
+        @Override
+        public boolean isRelative()
+        {
+            return false;
+        }
+    };
+
+    ANumericMetricIdentifier CYCLO_MAX_OF_CLASS = new ANumericMetricIdentifier() {
+        @Override
+        public String getIdentifier()
+        {
+            return "cyclomatic-complexity-max-of-class";
+        }
+
+        @Override
+        public String getName()
+        {
+            return "Cyclomatic-Complexity-Max-of-Class";
+        }
+
+        @Override
+        public String getDisplayString()
+        {
+            return "Cyclomatic Complexity: Max of class";
+        }
+
+        @Override
+        public String getShortDisplayString()
+        {
+            return "Cyclo-Max-of-Class";
         }
 
         @Override

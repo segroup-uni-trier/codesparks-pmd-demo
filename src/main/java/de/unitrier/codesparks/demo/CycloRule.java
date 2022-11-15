@@ -7,6 +7,10 @@ import net.sourceforge.pmd.lang.java.metrics.api.JavaOperationMetricKey;
 import net.sourceforge.pmd.lang.java.rule.AbstractJavaRule;
 import net.sourceforge.pmd.lang.metrics.MetricsUtil;
 
+/*
+ * Alternative way to retrieve the metric values directly from PMD. For advanced purposes only!
+ * See also class PMDDataProvider.
+ */
 public final class CycloRule extends AbstractJavaRule
 {
     @Override

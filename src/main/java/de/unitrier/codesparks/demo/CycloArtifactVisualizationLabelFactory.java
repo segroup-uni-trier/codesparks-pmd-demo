@@ -1,7 +1,7 @@
 package de.unitrier.codesparks.demo;
 
 import de.unitrier.st.codesparks.core.data.AArtifact;
-import de.unitrier.st.codesparks.core.data.AMetricIdentifier;
+import de.unitrier.st.codesparks.core.data.ANumericMetricIdentifier;
 import de.unitrier.st.codesparks.core.logging.CodeSparksLogger;
 import de.unitrier.st.codesparks.core.visualization.AArtifactVisualizationLabelFactory;
 import de.unitrier.st.codesparks.core.visualization.CodeSparksGraphics;
@@ -18,14 +18,25 @@ import static de.unitrier.st.codesparks.core.visualization.VisConstants.BORDER_C
 
 final class CycloArtifactVisualizationLabelFactory extends AArtifactVisualizationLabelFactory
 {
-    CycloArtifactVisualizationLabelFactory(final AMetricIdentifier primaryMetricIdentifier)
+    private final ANumericMetricIdentifier secondaryMetricIdentifier;
+
+    CycloArtifactVisualizationLabelFactory(final ANumericMetricIdentifier primaryMetricIdentifier,
+                                           final ANumericMetricIdentifier secondaryMetricIdentifier
+    )
     {
         super(primaryMetricIdentifier);
+        this.secondaryMetricIdentifier = secondaryMetricIdentifier;
     }
 
-    CycloArtifactVisualizationLabelFactory(final AMetricIdentifier primaryMetricIdentifier, final Class<?>... artifactClasses)
+    @SafeVarargs
+    CycloArtifactVisualizationLabelFactory(
+            final ANumericMetricIdentifier primaryMetricIdentifier,
+            final ANumericMetricIdentifier secondaryMetricIdentifier,
+            final Class<? extends AArtifact>... artifactClasses
+    )
     {
         super(primaryMetricIdentifier, artifactClasses);
+        this.secondaryMetricIdentifier = secondaryMetricIdentifier;
     }
 
     // https://colorbrewer2.org/#type=sequential&scheme=PuRd&n=4
@@ -50,6 +61,7 @@ final class CycloArtifactVisualizationLabelFactory extends AArtifactVisualizatio
         final int metricValue = (int) artifact.getNumericalMetricValue(primaryMetricIdentifier);
 
         final boolean isMethodArtifact = JavaUtil.isMethodArtifact(artifact);
+        final boolean isClassArtifact = JavaUtil.isClassArtifact(artifact);
 
         Color metricColor;
         String toolTipText;
@@ -84,17 +96,17 @@ final class CycloArtifactVisualizationLabelFactory extends AArtifactVisualizatio
         { // Any other type, e.g. a class. Use statistical thresholds according to: Lanza, Marinescu: OO-metrics in practice
             final double cycloMean = artifact.getNumericalMetricValue(PMDMetrics.CYCLO_MEAN);
             final double cycloSD = artifact.getNumericalMetricValue(PMDMetrics.CYCLO_SD);
+            String explanation = "sum of methods";
+            if (isClassArtifact)
+            {
+                final int maxOfClass = (int) artifact.getNumericalMetricValue(secondaryMetricIdentifier);
+                explanation += ", max=" + maxOfClass;
+            }
 
-            final String explanation = "sum of methods";
             final String scope = "compared to other classes in the project";
             double lowThreshold = cycloMean - cycloSD;
             double highThreshold = cycloMean + cycloSD;
             double veryHighThreshold = (cycloMean + cycloSD) * 1.5;
-
-//            final String stat = "mean=" +
-//                    CoreUtil.roundAndFormatToDigitsAfterComma(cycloMean, 2) +
-//                    ", sd=" +
-//                    CoreUtil.roundAndFormatToDigitsAfterComma(cycloSD, 2);
 
             final String interpretation;
             if (metricValue < lowThreshold)
@@ -129,7 +141,12 @@ final class CycloArtifactVisualizationLabelFactory extends AArtifactVisualizatio
         /*
          * Draw the text
          */
-        final String text = primaryMetricIdentifier.getShortDisplayString() + ": " + metricValue;
+        String text = primaryMetricIdentifier.getShortDisplayString() + ": " + metricValue;
+        if (isClassArtifact)
+        {
+            final int maxOfClass = (int) artifact.getNumericalMetricValue(secondaryMetricIdentifier);
+            text += " (" + maxOfClass + ")";
+        }
         final Font font = new Font("Arial", Font.BOLD, 11);
         graphics.setFont(font);
         final Color textColor = VisualizationUtil.getTextColor(metricColor);
