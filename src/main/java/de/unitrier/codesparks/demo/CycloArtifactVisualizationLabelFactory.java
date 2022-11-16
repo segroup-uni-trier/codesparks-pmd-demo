@@ -140,34 +140,34 @@ final class CycloArtifactVisualizationLabelFactory extends AArtifactVisualizatio
 
         // When we know the text to display, we can determine the actual width needed for the glyph.
         final int lineHeight = VisConstants.getLineHeight();
-        final int X_OFFSET = 8;
+        final int X_OFFSET = 6;
         final int Y_OFFSET = 2;
         final int maxWidth = 140; // pixels
         final CodeSparksGraphics graphics = getGraphics(maxWidth, lineHeight);
         final Font font = new Font("Arial", Font.BOLD, 11);
         graphics.setFont(font);
 
-        final double textWidth = graphics.stringWidth(text);
-        final int totalWidth = ((int) (Math.max(maxWidth / 2d, textWidth))) + 2 * X_OFFSET;
-
+        final int textWidth = graphics.stringWidth(text);
+        final int rectangleWidth = Math.max(maxWidth / 2, (int) (textWidth * 1.25f));
+        final int totalWidth = rectangleWidth + 2 * X_OFFSET;
 
         /*
          * Draw the intensity rectangle
          */
-        final Rectangle artifactVisualizationArea = new Rectangle(X_OFFSET, Y_OFFSET, totalWidth, lineHeight - Y_OFFSET);
+        final Rectangle artifactVisualizationArea = new Rectangle(X_OFFSET, Y_OFFSET, rectangleWidth, lineHeight - Y_OFFSET);
         graphics.fillRectangle(artifactVisualizationArea, metricColor);
 
         /*
          * Draw the frame
          */
-        final Rectangle frame = new Rectangle(X_OFFSET, Y_OFFSET, totalWidth, lineHeight - Y_OFFSET - 1);
+        final Rectangle frame = new Rectangle(X_OFFSET, Y_OFFSET, rectangleWidth - 1, lineHeight - Y_OFFSET - 1);
         graphics.drawRectangle(frame, BORDER_COLOR);
 
         /*
          * Draw the text
          */
         final Color textColor = VisualizationUtil.getTextColor(metricColor);
-        final int textXPos = X_OFFSET / 2 + (int) ((totalWidth / 2d) - (textWidth / 2d));
+        final int textXPos = X_OFFSET / 2 + (int) ((totalWidth / 2d) - (textWidth / 2d)) - 1;
         final int textYPos = Y_OFFSET + (int) ((lineHeight - Y_OFFSET) * .75d);
         graphics.drawString(text, textXPos, textYPos, textColor);
 

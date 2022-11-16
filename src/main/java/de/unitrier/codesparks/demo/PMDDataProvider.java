@@ -196,11 +196,15 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
     {
         final List<AArtifact> classArtifacts = artifactPool.getArtifacts(PMDClassArtifact.class);
         final List<Double> cycloValues =
-                classArtifacts.stream().map(artifact -> artifact.getNumericalMetricValue(CYCLOMATIC_COMPLEXITY)).collect(Collectors.toList());
+                classArtifacts
+                        .stream()
+                        .map(artifact -> artifact.getNumericalMetricValue(CYCLOMATIC_COMPLEXITY))
+                        .filter(val -> !val.isNaN())
+                        .collect(Collectors.toList());
         final Optional<Double> reduce = cycloValues.stream().reduce(Double::sum);
         if (reduce.isPresent())
         {
-            final int nrOfClassArtifacts = classArtifacts.size();
+            final int nrOfClassArtifacts = cycloValues.size();
             final Double sum = reduce.get();
             final double expectancyValue = sum / nrOfClassArtifacts; // Also the arithmetic average (mean).
 
