@@ -1,9 +1,14 @@
 # Compiled class file
 *.class
 
+# Custom
 .idea/*
 !.idea/modules.xml
 out
+.run/*
+!.run/CodeSparks-PMD-Demo.run.xml
+*.iml
+!codesparks-pmd-demo.iml
 
 # Log file
 *.log

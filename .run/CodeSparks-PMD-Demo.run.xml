@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="CodeSparks-PMD-Demo" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType">
+    <module name="codesparks-pmd-demo" />
+    <option name="VM_PARAMETERS" value="-Xmx4096m -Xms256m -ea -Dsun.java2d.uiScale.enabled=true -Dsun.java2d.uiScale=1 -Djava.system.class.loader=com.intellij.util.lang.PathClassLoader" />
+    <option name="PROGRAM_PARAMETERS" value="" />
+    <predefined_log_file enabled="true" id="idea.log" />
+    <method v="2">
+      <option name="AntTarget" enabled="true" antfile="file://$PROJECT_DIR$/build.xml" target="retrieve" />
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
