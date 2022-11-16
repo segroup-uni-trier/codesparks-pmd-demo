@@ -20,8 +20,9 @@ final class CycloArtifactVisualizationLabelFactory extends AArtifactVisualizatio
 {
     private final ANumericMetricIdentifier secondaryMetricIdentifier;
 
-    CycloArtifactVisualizationLabelFactory(final ANumericMetricIdentifier primaryMetricIdentifier,
-                                           final ANumericMetricIdentifier secondaryMetricIdentifier
+    CycloArtifactVisualizationLabelFactory(
+            final ANumericMetricIdentifier primaryMetricIdentifier,
+            final ANumericMetricIdentifier secondaryMetricIdentifier
     )
     {
         super(primaryMetricIdentifier);
@@ -48,16 +49,6 @@ final class CycloArtifactVisualizationLabelFactory extends AArtifactVisualizatio
     @Override
     public JLabel createArtifactLabel(@NotNull final AArtifact artifact)
     {
-        final int lineHeight = VisConstants.getLineHeight();
-        final int X_OFFSET = 6;
-        final int Y_OFFSET = 2;
-        final int width = 70;
-        final int totalWidth = width + 2 * X_OFFSET;
-        final CodeSparksGraphics graphics = getGraphics(totalWidth, lineHeight);
-        /*
-         * Draw the intensity rectangle
-         */
-        final Rectangle artifactVisualizationArea = new Rectangle(X_OFFSET, Y_OFFSET, width, lineHeight - Y_OFFSET);
         final int metricValue = (int) artifact.getNumericalMetricValue(primaryMetricIdentifier);
 
         final boolean isMethodArtifact = JavaUtil.isMethodArtifact(artifact);
@@ -134,28 +125,55 @@ final class CycloArtifactVisualizationLabelFactory extends AArtifactVisualizatio
             }
             toolTipText = String.format("Cyclomatic Complexity: %d (%s) >> %s %s.", metricValue, explanation, interpretation, scope);
         }
-        graphics.fillRectangle(artifactVisualizationArea, metricColor);
 
-        final Rectangle frame = new Rectangle(X_OFFSET, Y_OFFSET, width, lineHeight - Y_OFFSET - 1);
-        graphics.drawRectangle(frame, BORDER_COLOR);
         /*
-         * Draw the text
+         * Prepare the text
          */
         String text = primaryMetricIdentifier.getShortDisplayString() + ": " + metricValue;
         if (isClassArtifact)
         {
             final int maxOfClass = (int) artifact.getNumericalMetricValue(secondaryMetricIdentifier);
-            text += " (" + maxOfClass + ")";
+//            text += " (" + maxOfClass + ")";
+//            text += " | " + maxOfClass;
+            text += "\u2502" + maxOfClass;
         }
+
+        // When we know the text to display, we can determine the actual width needed for the glyph.
+        final int lineHeight = VisConstants.getLineHeight();
+        final int X_OFFSET = 8;
+        final int Y_OFFSET = 2;
+        final int maxWidth = 140; // pixels
+        final CodeSparksGraphics graphics = getGraphics(maxWidth, lineHeight);
         final Font font = new Font("Arial", Font.BOLD, 11);
         graphics.setFont(font);
-        final Color textColor = VisualizationUtil.getTextColor(metricColor);
+
         final double textWidth = graphics.stringWidth(text);
-        final int textXPos = X_OFFSET + 1 + (int) ((width / 2d) - (textWidth / 2d));
+        final int totalWidth = ((int) (Math.max(maxWidth / 2d, textWidth))) + 2 * X_OFFSET;
+
+
+        /*
+         * Draw the intensity rectangle
+         */
+        final Rectangle artifactVisualizationArea = new Rectangle(X_OFFSET, Y_OFFSET, totalWidth, lineHeight - Y_OFFSET);
+        graphics.fillRectangle(artifactVisualizationArea, metricColor);
+
+        /*
+         * Draw the frame
+         */
+        final Rectangle frame = new Rectangle(X_OFFSET, Y_OFFSET, totalWidth, lineHeight - Y_OFFSET - 1);
+        graphics.drawRectangle(frame, BORDER_COLOR);
+
+        /*
+         * Draw the text
+         */
+        final Color textColor = VisualizationUtil.getTextColor(metricColor);
+        final int textXPos = X_OFFSET / 2 + (int) ((totalWidth / 2d) - (textWidth / 2d));
         final int textYPos = Y_OFFSET + (int) ((lineHeight - Y_OFFSET) * .75d);
         graphics.drawString(text, textXPos, textYPos, textColor);
 
-        final JLabel jLabel = makeLabel(graphics);
+
+        final JLabel jLabel = makeLabel(graphics, totalWidth);
+//        final JLabel jLabel = makeLabel(graphics);
         final Toolkit toolkit = jLabel.getToolkit();
         final String resourceString = "/icons/question-256-flip-filled.png";
         final URL resource = getClass().getResource(resourceString);
