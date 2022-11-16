@@ -22,12 +22,6 @@
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.java</depends>
 
-    <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceInterface="de.unitrier.st.codesparks.core.service.CodeSparksInstanceService"
-                            serviceImplementation="de.unitrier.codesparks.demo.PMDInstanceService"
-        />
-    </extensions>
-
     <actions>
         <!-- Add your actions here -->
         <action id="codesparks.start.flow"

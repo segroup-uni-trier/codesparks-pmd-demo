@@ -1,12 +1,12 @@
 package de.unitrier.codesparks.demo;
 
+import de.unitrier.st.codesparks.core.CoreUtil;
 import de.unitrier.st.codesparks.core.IDataProvider;
 import de.unitrier.st.codesparks.core.data.AArtifact;
 import de.unitrier.st.codesparks.core.data.ArtifactBuilder;
 import de.unitrier.st.codesparks.core.data.DefaultArtifactPool;
 import de.unitrier.st.codesparks.core.data.IArtifactPool;
 import de.unitrier.st.codesparks.core.logging.CodeSparksLogger;
-import de.unitrier.st.codesparks.core.service.CodeSparksInstanceService;
 import net.sourceforge.pmd.*;
 import net.sourceforge.pmd.renderers.Renderer;
 import net.sourceforge.pmd.renderers.XMLRenderer;
@@ -41,8 +41,7 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
     @Override
     public boolean collectData()
     {
-        final CodeSparksInstanceService service = CodeSparksInstanceService.getInstance();
-        final String pluginAbsolutePath = service.getPluginPath().toAbsolutePath().toString();
+        final String pluginAbsolutePath = CoreUtil.getAbsolutePluginPathString();
 
         final PMDConfiguration pmdConfiguration = new PMDConfiguration();
         pmdConfiguration.setMinimumPriority(RulePriority.MEDIUM);
