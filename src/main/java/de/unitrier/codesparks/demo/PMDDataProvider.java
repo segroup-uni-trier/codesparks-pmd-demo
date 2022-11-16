@@ -13,6 +13,7 @@ import net.sourceforge.pmd.renderers.XMLRenderer;
 import net.sourceforge.pmd.stat.Metric;
 import net.sourceforge.pmd.util.datasource.DataSource;
 import net.sourceforge.pmd.util.datasource.FileDataSource;
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -155,10 +156,11 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
 
                 final int beginLine = ruleViolation.getBeginLine();
                 final String filename = ruleViolation.getFilename();
-                final String artifactIdentifier = PMDArtifactUtil.getArtifactIdentifier(filename, artifactName, beginLine);
+                final String fixedFileName = FilenameUtils.separatorsToSystem(filename);
+                final String artifactIdentifier = PMDArtifactUtil.getArtifactIdentifier(fixedFileName, artifactName, beginLine);
                 final ArtifactBuilder artifactBuilder = new ArtifactBuilder(artifactIdentifier, artifactDisplayName, artifactClass);
                 final AArtifact artifact = artifactBuilder
-                        .setFileName(filename)
+                        .setFileName(fixedFileName)
                         .setLineNumber(beginLine)
                         .get();
 
