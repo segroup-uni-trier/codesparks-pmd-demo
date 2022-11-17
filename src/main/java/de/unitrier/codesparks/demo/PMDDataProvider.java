@@ -169,7 +169,13 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
                 int metricValueIndex;
                 if (isClass)
                 {
-                    metricValueIndex = 3;
+                    if (description.contains("'lambda'"))
+                    {
+                        metricValueIndex = 1;
+                    } else
+                    {
+                        metricValueIndex = 3;
+                    }
                     String maxOfClass = split[split.length - 1];
                     maxOfClass = getSubStringUntilLastOf(maxOfClass, ")");
                     final Double maxOfClassValue = parseMetricValue(maxOfClass);
@@ -225,7 +231,6 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
     /*
      * Minor helpers.
      */
-
     private String getSubStringUntilLastOf(final String str, final String delimiter)
     {
         final int lastIndexOf = str.lastIndexOf(delimiter);
@@ -243,7 +248,7 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
             return Double.parseDouble(metricValueString);
         } catch (NumberFormatException e)
         {
-            CodeSparksLogger.addText("Could not parse metric metricValue to double: %s", e.getMessage());
+            CodeSparksLogger.addText("Could not parse metric value to double: %s", e.getMessage());
             return Double.NaN;
         }
     }

@@ -11,6 +11,7 @@ import de.unitrier.st.codesparks.core.properties.PropertiesUtil;
 import de.unitrier.st.codesparks.core.properties.PropertyKey;
 import de.unitrier.st.codesparks.core.visualization.AArtifactVisualizationLabelFactory;
 import de.unitrier.st.codesparks.core.visualization.DefaultDataVisualizer;
+import de.unitrier.st.codesparks.java.JavaStandardLibraryFilter;
 
 public class PMDFlow extends ACodeSparksFlow implements PMDMetrics
 {
@@ -18,17 +19,22 @@ public class PMDFlow extends ACodeSparksFlow implements PMDMetrics
     {
         super(project);
 
-        registerCurrentFileArtifactFilter(JavaCurrentFileArtifactFilter.getInstance(AArtifact::getName));
-
-        final ArtifactMetricComparator artifactMetricComparator = new ArtifactMetricComparator(CYCLOMATIC_COMPLEXITY, true);
-
-//        final CycloArtifactVisualizationLabelFactory cycloArtifactVisualizationLabelFactory =
+        /*
+         * Create an instance of the label factory.
+         */
+        //final CycloArtifactVisualizationLabelFactory cycloArtifactVisualizationLabelFactory =
 //                new CycloArtifactVisualizationLabelFactory(CYCLOMATIC_COMPLEXITY, CYCLO_MAX_OF_CLASS, PMDClassArtifact.class, PMDMethodArtifact.class);
         // Alternative:
         final CycloArtifactVisualizationLabelFactory cycloArtifactVisualizationLabelFactory =
                 new CycloArtifactVisualizationLabelFactory(CYCLOMATIC_COMPLEXITY, CYCLO_MAX_OF_CLASS);
 
+        /*
+         * Configuring the Overview Window.
+         */
+        registerCurrentFileArtifactFilter(JavaCurrentFileArtifactFilter.getInstance(AArtifact::getName));
+        registerStandardLibraryArtifactFilter(JavaStandardLibraryFilter.getInstance());
 
+        final ArtifactMetricComparator artifactMetricComparator = new ArtifactMetricComparator(CYCLOMATIC_COMPLEXITY, true);
         registerArtifactMetricComparatorForSorting(PMDMethodArtifact.class, artifactMetricComparator);
         registerArtifactMetricComparatorForSorting(PMDClassArtifact.class, artifactMetricComparator);
         registerArtifactClassVisualizationLabelFactory(PMDMethodArtifact.class, cycloArtifactVisualizationLabelFactory);
@@ -45,16 +51,21 @@ public class PMDFlow extends ACodeSparksFlow implements PMDMetrics
             return artifactClass.getSimpleName();
         });
 
-        PropertiesUtil.setPropertyValue(PropertiesFile.USER_INTERFACE_PROPERTIES,
-                PropertyKey.THREAD_VISUALIZATIONS_ENABLED, false);
+        /*
+         * Disable the thread filter area in the Artifact Overview Window.
+         */
+        PropertiesUtil.setPropertyValue(PropertiesFile.USER_INTERFACE_PROPERTIES, PropertyKey.OVERVIEW_WINDOW_THREAD_FILTER_AREA_VISIBLE, false);
 
+        /*
+         * Set up all interfaces that implement the four phases of the CodeSparks flow.
+         */
         final String basePath = project.getBasePath();
 
-        dataProvider = new PMDDataProvider(basePath);
+        dataProvider = new PMDDataProvider(basePath); // Implements and combines the data integration and processing phase.
 
-        matcher = new FileAndLineBasedJavaArtifactPoolToCodeMatcher();
+        matcher = new FileAndLineBasedJavaArtifactPoolToCodeMatcher(); // The matching phase. Included in the core library.
 
-        dataVisualizer = new DefaultDataVisualizer(new AArtifactVisualizationLabelFactory[]{
+        dataVisualizer = new DefaultDataVisualizer(new AArtifactVisualizationLabelFactory[]{ // Instantiate a data visualizer. Register label factories.
                 cycloArtifactVisualizationLabelFactory
         });
     }
