@@ -3,15 +3,18 @@ package de.unitrier.codesparks.demo;
 import com.intellij.openapi.project.Project;
 import de.unitrier.st.codesparks.core.ACodeSparksFlow;
 import de.unitrier.st.codesparks.core.data.AArtifact;
-import de.unitrier.st.codesparks.java.FileAndLineBasedJavaArtifactPoolToCodeMatcher;
-import de.unitrier.st.codesparks.java.JavaCurrentFileArtifactFilter;
 import de.unitrier.st.codesparks.core.overview.ArtifactMetricComparator;
 import de.unitrier.st.codesparks.core.properties.PropertiesFile;
 import de.unitrier.st.codesparks.core.properties.PropertiesUtil;
 import de.unitrier.st.codesparks.core.properties.PropertyKey;
 import de.unitrier.st.codesparks.core.visualization.AArtifactVisualizationLabelFactory;
+import de.unitrier.st.codesparks.core.visualization.DefaultArtifactVisualizationLabelFactory;
 import de.unitrier.st.codesparks.core.visualization.DefaultDataVisualizer;
+import de.unitrier.st.codesparks.java.FileAndLineBasedJavaArtifactPoolToCodeMatcher;
+import de.unitrier.st.codesparks.java.JavaCurrentFileArtifactFilter;
 import de.unitrier.st.codesparks.java.JavaStandardLibraryFilter;
+
+import java.awt.*;
 
 public class PMDFlow extends ACodeSparksFlow implements PMDMetrics
 {
@@ -19,14 +22,46 @@ public class PMDFlow extends ACodeSparksFlow implements PMDMetrics
     {
         super(project);
 
+        // Create an instance of the label factory.
+        final CycloArtifactVisualizationLabelFactory cycloArtifactVisualizationLabelFactory =
+                new CycloArtifactVisualizationLabelFactory(
+                        CYCLOMATIC_COMPLEXITY, // The primary metric identifier.
+                        CYCLO_MAX_OF_CLASS, // Add another metric identifier.
+                        PMDClassArtifact.class, // Apply this visualization for class artifacts ...
+                        PMDMethodArtifact.class // and method artifacts.
+                );
+        // Alternative. If the artifact classes are not specified, the label factory applies to each artifact type present in the artifact pool:
         /*
-         * Create an instance of the label factory.
-         */
-        //final CycloArtifactVisualizationLabelFactory cycloArtifactVisualizationLabelFactory =
-//                new CycloArtifactVisualizationLabelFactory(CYCLOMATIC_COMPLEXITY, CYCLO_MAX_OF_CLASS, PMDClassArtifact.class, PMDMethodArtifact.class);
-        // Alternative:
         final CycloArtifactVisualizationLabelFactory cycloArtifactVisualizationLabelFactory =
                 new CycloArtifactVisualizationLabelFactory(CYCLOMATIC_COMPLEXITY, CYCLO_MAX_OF_CLASS);
+        */
+        // An example using the default label factory.
+        final AArtifactVisualizationLabelFactory simpleCycloArtifactVisualizationLabelFactoryForMethods =
+                new DefaultArtifactVisualizationLabelFactory( // A visualization for ...
+                        CYCLOMATIC_COMPLEXITY, // ... the cyclomatic complexity ...
+                        0, // ... at first position (left-most) in case there are multiple label factories registered ...
+                        0, // ... with an x-offset of 0 to the previous visualization (left) ...
+                        metricValue -> { // ... which applies this coloring strategy ...
+                            final int metricIntValue = ((Double) metricValue).intValue();
+                            Color metricColor;
+                            if (metricIntValue < 11)
+                                metricColor = Color.decode("#fef0d9");
+                            else
+                            {
+                                if (metricIntValue < 21)
+                                    metricColor = Color.decode("#fdcc8a");
+                                else
+                                {
+                                    if (metricIntValue < 51)
+                                        metricColor = Color.decode("#fc8d59");
+                                    else
+                                        metricColor = Color.decode("#d7301f");
+                                }
+                            }
+                            return metricColor;
+                        },
+                        PMDMethodArtifact.class // ... and only applies for method artifacts.
+                );
 
         /*
          * Configuring the Overview Window.
@@ -67,6 +102,8 @@ public class PMDFlow extends ACodeSparksFlow implements PMDMetrics
 
         dataVisualizer = new DefaultDataVisualizer(new AArtifactVisualizationLabelFactory[]{ // Instantiate a data visualizer. Register label factories.
                 cycloArtifactVisualizationLabelFactory
+//                ,
+//                simpleCycloArtifactVisualizationLabelFactoryForMethods
         });
     }
 }
