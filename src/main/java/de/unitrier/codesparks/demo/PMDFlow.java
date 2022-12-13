@@ -96,7 +96,11 @@ public class PMDFlow extends ACodeSparksFlow implements PMDMetrics
          */
         final String basePath = project.getBasePath();
 
-        dataProvider = new PMDDataProvider(basePath); // Implements and combines the data integration and processing phase.
+        final PMDDataProvider pmdDataProvider = new PMDDataProvider(basePath); // Implements and combines the data integration and processing phase.
+
+        dataCollector = pmdDataProvider.getDataCollector();
+
+        dataProcessor = pmdDataProvider.getDataProcessor();
 
         matcher = new FileAndLineBasedJavaArtifactPoolToCodeMatcher(); // The matching phase. Included in the core library.
 

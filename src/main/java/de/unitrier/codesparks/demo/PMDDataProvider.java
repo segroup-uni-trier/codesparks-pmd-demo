@@ -1,7 +1,7 @@
 package de.unitrier.codesparks.demo;
 
+import de.unitrier.st.codesparks.core.ADataProvider;
 import de.unitrier.st.codesparks.core.CoreUtil;
-import de.unitrier.st.codesparks.core.IDataProvider;
 import de.unitrier.st.codesparks.core.data.AArtifact;
 import de.unitrier.st.codesparks.core.data.ArtifactBuilder;
 import de.unitrier.st.codesparks.core.data.DefaultArtifactPool;
@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-final class PMDDataProvider implements IDataProvider, PMDMetrics
+final class PMDDataProvider extends ADataProvider implements PMDMetrics
 {
     private final String projectPath;
 
