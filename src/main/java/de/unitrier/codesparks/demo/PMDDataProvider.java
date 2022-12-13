@@ -46,6 +46,14 @@ final class PMDDataProvider implements IDataProvider, PMDMetrics
         final PMDConfiguration pmdConfiguration = new PMDConfiguration();
         pmdConfiguration.setMinimumPriority(RulePriority.MEDIUM);
 
+        final Path pluginPath = CoreUtil.getPluginPath();
+        if (pluginPath != null)
+        {
+            final String cacheLocation = pluginPath + File.separator + "pmd-analysis.cache";
+            pmdConfiguration.setAnalysisCacheLocation(cacheLocation);
+            CodeSparksLogger.addText("PMD analysis cache located at: %s", cacheLocation);
+        }
+
         final String pmdRulesPath = pluginAbsolutePath
                 + File.separator
                 + "classes"

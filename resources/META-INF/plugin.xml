@@ -3,11 +3,12 @@
     <name>CodeSparks-PMD</name>
     <version>1.0</version>
     <!-- @formatter:off -->
-    <vendor email="softwaretechnik@informatik.uni-trier.de" url="https://www.st.uni-trier.de">University of Trier - Software Engineering Group</vendor>
+    <vendor email="olivermoseler@gmail.com" url="https://olivermoseler.github.io/">Oliver Moseler</vendor>
     <!-- @formatter:on -->
 
     <description>
-        This is a demo implementation of the CodeSparks framework.
+        This is a demo implementation of the CodeSparks framework, which augments source code with interactive,
+        glyph-based in-situ visualizations that depict the cyclomatic complexity of class and method artifacts.
     </description>
 
     <!--change-notes>
@@ -23,13 +24,16 @@
     <depends>com.intellij.java</depends>
 
     <actions>
-        <!-- Add your actions here -->
         <action id="codesparks.start.flow"
                 class="de.unitrier.codesparks.demo.StartPMDFlowAction"
                 text="Start PMD Flow"
-                description="Start pmd flow"
-                icon="/icons/pmd_37x15.png"
-        >
+                icon="/icons/pmd_37x15.png">
+            <add-to-group group-id="MainToolBar" anchor="last"/>
+        </action>
+        <action id="toggle.show.hide.visualization"
+                class="de.unitrier.st.codesparks.core.action.ToggleVisualization"
+                text="Hide CodeSparks Visualizations"
+                icon="/icons/codesparks_visible_20x13.png">
             <add-to-group group-id="MainToolBar" anchor="last"/>
         </action>
     </actions>
