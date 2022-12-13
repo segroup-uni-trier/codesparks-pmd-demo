@@ -1,10 +1,11 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 authors:
-  - family-names: Moseler
-    given-names: Oliver
-    orcid: https://orcid.org/0000-0003-3118-4968
+  - family-names: "Moseler"
+    given-names: "Oliver"
+    orcid: "https://orcid.org/0000-0003-3118-4968"
 title: "CodeSparks-PMD Demo"
 version: 1.0.0
 doi: 
+url: "https://github.com/segroup-uni-trier/codesparks-pmd-demo"
 date-released: 2022-12-13
