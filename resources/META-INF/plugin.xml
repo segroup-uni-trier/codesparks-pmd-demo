@@ -3,12 +3,16 @@
     <name>CodeSparks-PMD</name>
     <version>1.0</version>
     <!-- @formatter:off -->
-    <vendor email="olivermoseler@gmail.com" url="https://olivermoseler.github.io/">Oliver Moseler</vendor>
+    <vendor email="olivermoseler@gmail.com" url="https://de.linkedin.com/in/oliver-moseler">Oliver Moseler</vendor>
     <!-- @formatter:on -->
 
     <description>
         This is a demo implementation of the CodeSparks framework, which augments source code with interactive,
         glyph-based in-situ visualizations that depict the cyclomatic complexity of class and method artifacts.
+        <![CDATA[
+        <br><br>
+        <a href="https://www.flaticon.com/free-icons/question" title="question icons">Question icons created by Saepul Nahwan - Flaticon</a>
+        ]]>
     </description>
 
     <!--change-notes>
