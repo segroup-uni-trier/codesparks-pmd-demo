@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="codesparks-pmd-demo" basedir="." default="retrieve" xmlns:ivy="antlib:org.apache.ivy.ant">
 
+    <!-- Semantic Versioning, https://semver.org/ -->
+
+    <property name="major" value="1"/>
+    <property name="minor" value="0"/>
+    <property name="patch" value="0"/>
+
+    <property name="version" value="${major}.${minor}.${patch}"/>
+
+    <!-- General properties -->
+
     <property name="lib.dir" value="lib"/>
     <property name="resources.dir" value="resources"/>
     <property name="src.dir" value="src/main"/>
@@ -139,10 +149,10 @@
 
     <!-- Create the plugin ZIP -->
 
-    <property name="zip.file" value="codesparks-pmd.zip"/>
+    <property name="zip.file" value="codesparks-pmd-${version}.zip"/>
     <property name="zip.dir" value="${ant.project.name}"/>
     <property name="zip.dir.lib" value="${zip.dir}/lib"/>
-    <property name="codesparks-pmd.jar" value="${zip.dir.lib}/codesparks-pmd.jar"/>
+    <property name="codesparks-pmd.jar" value="${zip.dir.lib}/codesparks-pmd-${version}.jar"/>
 
     <target name="zip" depends="compile">
         <delete file="${zip.file}"/>
@@ -153,7 +163,9 @@
             <fileset dir="${resources.dir}/" includes="LICENSE.txt"/>
             <fileset dir="${resources.dir}/pmd" includes="codesparks-pmd-demo.xml"/>
             <fileset dir="${lib.dir}"
-                     includes="pmd-core-6.29.0.jar, pmd-java-6.29.0.jar, codesparks-core.jar"/>
+                     includes="pmd-core-6.29.0.jar, pmd-java-6.29.0.jar, codesparks-core-*.jar, codesparks-java-*.jar"
+                     excludes="codesparks-core-*-sources.jar, codesparks-java-*-sources.jar"
+            />
         </copy>
 
         <jar basedir="${classes.dir}" destfile="${codesparks-pmd.jar}">

@@ -1,7 +1,7 @@
 package de.unitrier.codesparks.demo;
 
 import de.unitrier.st.codesparks.core.data.AArtifact;
-import de.unitrier.st.codesparks.java.JavaArtifactNavigationUtil;
+import de.unitrier.st.codesparks.core.navigation.ArtifactNavigationUtil;
 import de.unitrier.st.codesparks.core.logging.CodeSparksLogger;
 
 abstract class PMDArtifact extends AArtifact
@@ -16,7 +16,7 @@ abstract class PMDArtifact extends AArtifact
     {
         if (!super.navigate())
         {
-            final boolean navigate = JavaArtifactNavigationUtil.navigateToLineInFile(fileName, lineNumber);
+            final boolean navigate = ArtifactNavigationUtil.navigateToLineInFile(fileName, lineNumber);
             if (!navigate)
             {
                 CodeSparksLogger.addText("Could not navigate to artifact: %s", identifier);
