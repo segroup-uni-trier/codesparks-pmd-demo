@@ -54,11 +54,17 @@ final class PMDDataProvider extends ADataProvider implements PMDMetrics
             CodeSparksLogger.addText("PMD analysis cache located at: %s", cacheLocation);
         }
 
+//        final String pmdRulesPath = pluginAbsolutePath
+//                + File.separator
+//                + "classes"
+//                + File.separator
+//                + "pmd"
+//                + File.separator
+//                + "codesparks-pmd-demo.xml";
+
         final String pmdRulesPath = pluginAbsolutePath
                 + File.separator
-                + "classes"
-                + File.separator
-                + "pmd"
+                + "lib"
                 + File.separator
                 + "codesparks-pmd-demo.xml";
 

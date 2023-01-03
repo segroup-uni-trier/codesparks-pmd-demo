@@ -2,6 +2,24 @@
 <project name="codesparks-pmd-demo" basedir="." default="retrieve" xmlns:ivy="antlib:org.apache.ivy.ant">
 
     <property name="lib.dir" value="lib"/>
+    <property name="resources.dir" value="resources"/>
+    <property name="src.dir" value="src/main"/>
+    <property name="build.dir" value="build"/>
+    <property name="classes.dir" value="${build.dir}/classes/main"/>
+    <property name="jars.dir" value="${build.dir}/jars"/>
+
+    <condition property="is-windows">
+        <os family="windows"/>
+    </condition>
+
+    <condition property="is-linux">
+        <and>
+            <os family="unix"/>
+            <not>
+                <os family="mac"/>
+            </not>
+        </and>
+    </condition>
 
     <!-- Ivy -->
 
@@ -37,6 +55,127 @@
 
     <target name="clean-cache">
         <ivy:cleancache/>
+    </target>
+
+    <!-- Cleanup -->
+
+    <available file="${classes.dir}" type="dir" property="classes.dir.exists"/>
+
+    <target name="clean-classes" if="classes.dir.exists">
+        <delete includeemptydirs="true">
+            <fileset dir="${classes.dir}" includes="**/*" excludes="*.*"/>
+        </delete>
+        <echo message="Cleaned class files"/>
+    </target>
+
+    <!-- Compilation -->
+
+    <property name="idea.version.windows" value="2022.2.4"/>
+    <property name="idea.version.major" value="2022"/>
+    <property name="idea.version.minor" value="2"/>
+
+    <property name="idea.version.linux" value="222.4459.24"/>
+
+    <target name="intellij-path-linux" if="is-linux">
+        <property name="jdk.home.intellij_idea"
+                  value="/opt/idea-IC-${idea.version.linux}"/>
+    </target>
+
+    <target name="intellij-path-windows" if="is-windows">
+        <property name="jdk.home.intellij_idea"
+                  value="C:/Program Files/JetBrains/IntelliJ IDEA Community Edition ${idea.version.windows}"/>
+    </target>
+
+    <target name="def-libs" depends="intellij-path-linux, intellij-path-windows, retrieve">
+        <!--        <echo message="${jdk.home.intellij_idea}"/>-->
+        <path id="libs">
+            <fileset dir="${lib.dir}" includes="*.jar"/>
+            <fileset dir="${jdk.home.intellij_idea}/lib" includes="**/*.jar"
+                     excludes="kotlin-stdlib-jdk8.jar,ant/lib/ant.jar"/>
+            <!--
+            Excluding '3rd-party-rt.jar' will make the tests of codesparks-jpt fail because the classes cannot be
+            found anymore.
+            -->
+            <fileset dir="${jdk.home.intellij_idea}/plugins/java"
+                     includes="**/*.jar"/> <!-- Although it compiles without these dependencies, it is required for, e.g. the class 'PsiClass' which is contained in the IntelliJ Plugin Development's internal 'Java Plugin'. So don't remove it!!! -->
+        </path>
+    </target>
+
+    <property environment="env"/>
+
+    <target name="compile" depends="clean-classes, def-libs"
+            unless="compilation-executed">
+        <echo message="${jdk.home.intellij_idea}"/>
+        <echo message="OS Name is:         ${os.name}"/>
+        <echo message="OS Architecture is: ${os.arch}"/>
+        <echo message="OS Version is:      ${os.version}"/>
+        <mkdir dir="${classes.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" debug="true" includeantruntime="false">
+            <classpath>
+                <path refid="libs"/>
+            </classpath>
+            <compilerarg
+                    line="-encoding UTF-8 -source 11 --system &quot;${env.JAVA_HOME}&quot; -target 11 -Xlint:-unchecked"/>
+        </javac>
+        <property name="compilation-executed" value="true"/>
+    </target>
+
+    <property name="idea.version.windows.agent.copy.path" value="${idea.version.major}.${idea.version.minor}"/>
+
+    <target name="copy-pmd-rules" depends="copy-pmd-rules-windows, copy-pmd-rules-linux"
+            description="This task is used to copy the JVMTI stack sampling agent to the IntelliJ plugin sandbox folder in case that folder was deleted or has not yet been created."/>
+
+    <target name="copy-pmd-rules-windows" if="is-windows">
+        <copy file="resources\pmd\codesparks-pmd-demo.xml"
+              todir="${user.home}\AppData\Local\JetBrains\IdeaIC${idea.version.windows.agent.copy.path}\plugins-sandbox\plugins\${ant.project.name}\lib"
+              overwrite="true"/>
+    </target>
+
+    <target name="copy-pmd-rules-linux" if="is-linux">
+        <copy file="resources/pmd/codesparks-pmd-demo.xml"
+              todir="${user.home}/.cache/JetBrains/IdeaIC${idea.version.major}.${idea.version.minor}/plugins-sandbox/plugins/${ant.project.name}/lib"
+              overwrite="true"/>
+    </target>
+
+    <!-- Create the plugin ZIP -->
+
+    <property name="zip.file" value="codesparks-pmd.zip"/>
+    <property name="zip.dir" value="${ant.project.name}"/>
+    <property name="zip.dir.lib" value="${zip.dir}/lib"/>
+    <property name="codesparks-pmd.jar" value="${zip.dir.lib}/codesparks-pmd.jar"/>
+
+    <target name="zip" depends="compile">
+        <delete file="${zip.file}"/>
+
+        <mkdir dir="${zip.dir.lib}"/>
+
+        <copy todir="${zip.dir.lib}">
+            <fileset dir="${resources.dir}/" includes="LICENSE.txt"/>
+            <fileset dir="${resources.dir}/pmd" includes="codesparks-pmd-demo.xml"/>
+            <fileset dir="${lib.dir}"
+                     includes="pmd-core-6.29.0.jar, pmd-java-6.29.0.jar, codesparks-core.jar"/>
+        </copy>
+
+        <jar basedir="${classes.dir}" destfile="${codesparks-pmd.jar}">
+            <fileset dir="${resources.dir}"
+                     includes="icons/pmd_37x15.png,
+                                icons/pmd_37x15.png_NOTICE.txt,
+                                icons/question-256-flip-filled.png,
+                                icons/question-256.png_NOTICE.txt,
+                                META-INF/*,
+                                svg/*,
+                                LICENCE.txt,
+                                NOTICE.txt"
+                     excludes="pmd/*"/>
+        </jar>
+
+        <zip basedir="${basedir}"
+             destfile="${zip.file}"
+             encoding="UTF-8"
+             includes="${zip.dir}/**/*">
+        </zip>
+
+        <delete dir="${zip.dir}"/>
     </target>
 
 </project>
