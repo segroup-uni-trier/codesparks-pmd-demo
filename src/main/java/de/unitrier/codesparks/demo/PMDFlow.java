@@ -10,7 +10,7 @@ import de.unitrier.st.codesparks.core.properties.PropertyKey;
 import de.unitrier.st.codesparks.core.visualization.AArtifactVisualizationLabelFactory;
 import de.unitrier.st.codesparks.core.visualization.DefaultArtifactVisualizationLabelFactory;
 import de.unitrier.st.codesparks.core.visualization.DefaultDataVisualizer;
-import de.unitrier.st.codesparks.java.FileAndLineBasedJavaArtifactPoolToCodeMatcher;
+import de.unitrier.st.codesparks.core.matching.FileAndLineBasedArtifactPoolToCodeMatcher;
 import de.unitrier.st.codesparks.java.JavaCurrentFileArtifactFilter;
 import de.unitrier.st.codesparks.java.JavaStandardLibraryFilter;
 
@@ -22,7 +22,7 @@ public class PMDFlow extends ACodeSparksFlow implements PMDMetrics
     {
         super(project);
 
-        // Create an instance of the label factory.
+        // Create an instance of the dedicated label factory for cyclomatic complexity.
         final CycloArtifactVisualizationLabelFactory cycloArtifactVisualizationLabelFactory =
                 new CycloArtifactVisualizationLabelFactory(
                         CYCLOMATIC_COMPLEXITY, // The primary metric identifier.
@@ -31,11 +31,11 @@ public class PMDFlow extends ACodeSparksFlow implements PMDMetrics
                         PMDMethodArtifact.class // and method artifacts.
                 );
         // Alternative. If the artifact classes are not specified, the label factory applies to each artifact type present in the artifact pool:
-        /*
-        final CycloArtifactVisualizationLabelFactory cycloArtifactVisualizationLabelFactory =
-                new CycloArtifactVisualizationLabelFactory(CYCLOMATIC_COMPLEXITY, CYCLO_MAX_OF_CLASS);
-        */
-        // An example using the default label factory.
+
+//        final CycloArtifactVisualizationLabelFactory cycloArtifactVisualizationLabelFactory =
+//                new CycloArtifactVisualizationLabelFactory(CYCLOMATIC_COMPLEXITY, CYCLO_MAX_OF_CLASS);
+
+        // An example of a label factory using the default label factory.
         final AArtifactVisualizationLabelFactory simpleCycloArtifactVisualizationLabelFactoryForMethods =
                 new DefaultArtifactVisualizationLabelFactory( // A visualization for ...
                         CYCLOMATIC_COMPLEXITY, // ... the cyclomatic complexity ...
@@ -98,13 +98,14 @@ public class PMDFlow extends ACodeSparksFlow implements PMDMetrics
 
         final PMDDataProvider pmdDataProvider = new PMDDataProvider(basePath); // Implements and combines the data integration and processing phase.
 
-        dataCollector = pmdDataProvider.getDataCollector();
+        dataCollector = pmdDataProvider.getDataCollector(); // Phase 1: Data integration
 
-        dataProcessor = pmdDataProvider.getDataProcessor();
+        dataProcessor = pmdDataProvider.getDataProcessor(); // Phase 2: Data processing
 
-        matcher = new FileAndLineBasedJavaArtifactPoolToCodeMatcher(); // The matching phase. Included in the core library.
+        matcher = new FileAndLineBasedArtifactPoolToCodeMatcher(); // Phase 3: Matching. Included in the core library.
 
-        dataVisualizer = new DefaultDataVisualizer(new AArtifactVisualizationLabelFactory[]{ // Instantiate a data visualizer. Register label factories.
+        dataVisualizer = new DefaultDataVisualizer(new AArtifactVisualizationLabelFactory[]{ // Phase 4: Visualization. Instantiate a data visualizer.
+                // Register the label factories.
                 cycloArtifactVisualizationLabelFactory
 //                ,
 //                simpleCycloArtifactVisualizationLabelFactoryForMethods

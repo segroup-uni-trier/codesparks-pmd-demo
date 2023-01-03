@@ -31,17 +31,6 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library">
-      <library name="codesparks-core">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/codesparks-core.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://$MODULE_DIR$/lib/codesparks-core-sources.jar!/" />
-          <root url="jar://$MODULE_DIR$/lib/codesparks-core-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
+    <orderEntry type="module" module-name="codesparks-core" />
   </component>
 </module>
