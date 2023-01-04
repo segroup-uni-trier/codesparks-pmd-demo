@@ -11,7 +11,6 @@ import de.unitrier.st.codesparks.java.JavaUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.tools.Tool;
 import java.awt.*;
 import java.net.URL;
 
@@ -134,8 +133,6 @@ final class CycloArtifactVisualizationLabelFactory extends AArtifactVisualizatio
         if (isClassArtifact)
         {
             final int maxOfClass = (int) artifact.getNumericalMetricValue(secondaryMetricIdentifier);
-//            text += " (" + maxOfClass + ")";
-//            text += " | " + maxOfClass;
             text += "\u2502" + maxOfClass;
         }
 
@@ -172,41 +169,45 @@ final class CycloArtifactVisualizationLabelFactory extends AArtifactVisualizatio
         final int textYPos = Y_OFFSET + (int) ((lineHeight - Y_OFFSET) * .75d);
         graphics.drawString(text, textXPos, textYPos, textColor);
 
-
         final JLabel jLabel = makeLabel(graphics, totalWidth);
-//        final JLabel jLabel = makeLabel(graphics);
-        final Toolkit toolkit = jLabel.getToolkit();
+
+        // Set custom cursor.
         final String resourceString = "/icons/question-256-flip-filled.png";
         final URL resource = getClass().getResource(resourceString);
         if (resource != null)
         {
-            final Cursor defaultCursor = Cursor.getDefaultCursor();
-
-
             final ImageIcon imageIcon = new ImageIcon(resource);
             final int iconWidth = imageIcon.getIconWidth();
             final int iconHeight = imageIcon.getIconHeight();
 
-            final Dimension cursorSize = Toolkit.getDefaultToolkit().getBestCursorSize(0, 0);
+            final Toolkit toolkit = jLabel.getToolkit();
+            final Dimension bestCursorSize = toolkit.getBestCursorSize(iconWidth, iconHeight);
+            final float scaleFactor = isLinux() ? .5f : 1f;
+            final int imageWidth = Math.min(32, (int) (bestCursorSize.width * scaleFactor));
+            final int imageHeight = Math.min(32, (int) (bestCursorSize.height * scaleFactor));
+            final Image image = imageIcon.getImage();
+            final Image scaledImage = image.getScaledInstance(imageWidth, imageHeight, Image.SCALE_SMOOTH);
+
             final Cursor customCursor = toolkit.createCustomCursor(
-                    imageIcon.getImage(),
-                    new Point(cursorSize.width / 2, cursorSize.height / 2),
+                    scaledImage,
+                    new Point(imageWidth / 2, imageHeight / 2),
                     "question-mark"
             );
-            //final Dimension bestCursorSize = toolkit.getBestCursorSize(iconWidth, iconHeight);
-//            final Cursor customCursor = toolkit.createCustomCursor(
-//                    imageIcon.getImage(),
-//                    new Point(bestCursorSize.width / 2, bestCursorSize.height / 2),
-//                    "question-mark"
-//            );
 
             jLabel.setCursor(customCursor);
         } else
         {
             CodeSparksLogger.addText("Could not load resource: " + resourceString);
         }
+        // Tooltip.
         jLabel.setToolTipText(toolTipText);
 
         return jLabel;
+    }
+
+    private boolean isLinux()
+    {
+        final String os = System.getProperty("os.name");
+        return "Linux".equals(os);
     }
 }
