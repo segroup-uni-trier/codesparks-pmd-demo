@@ -4,7 +4,7 @@ authors:
   - family-names: "Moseler"
     given-names: "Oliver"
     orcid: "https://orcid.org/0000-0003-3118-4968"
-title: "CodeSparks-PMD Demo"
+title: "CodeSparks-PMD"
 version: 1.0.0
 doi: 
 url: "https://github.com/segroup-uni-trier/codesparks-pmd-demo"
