@@ -77,11 +77,11 @@ public class PMDFlow extends ACodeSparksFlow implements PMDMetrics
         registerArtifactClassDisplayNameProvider(artifactClass -> {
             if (artifactClass.equals(PMDMethodArtifact.class))
             {
-                return "PMD method artifacts";
+                return "Method artifacts";
             }
             if (artifactClass.equals(PMDClassArtifact.class))
             {
-                return "PMD class artifacts";
+                return "Class artifacts";
             }
             return artifactClass.getSimpleName();
         });

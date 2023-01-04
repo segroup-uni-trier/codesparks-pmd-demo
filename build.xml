@@ -154,10 +154,10 @@
 
     <!-- Create the plugin ZIP -->
 
-    <property name="zip.file" value="codesparks-pmd-${version}.zip"/>
+    <property name="zip.file" value="${ant.project.name}-${version}.zip"/>
     <property name="zip.dir" value="${ant.project.name}"/>
     <property name="zip.dir.lib" value="${zip.dir}/lib"/>
-    <property name="codesparks-pmd.jar" value="${zip.dir.lib}/codesparks-pmd-${version}.jar"/>
+    <property name="codesparks-pmd-demo.jar" value="${zip.dir.lib}/${ant.project.name}-${version}.jar"/>
 
     <target name="zip" depends="compile">
         <delete file="${zip.file}"/>
@@ -173,17 +173,19 @@
             />
         </copy>
 
-        <jar basedir="${classes.dir}" destfile="${codesparks-pmd.jar}">
+        <jar basedir="${classes.dir}" destfile="${codesparks-pmd-demo.jar}">
             <fileset dir="${resources.dir}"
                      includes="icons/pmd_37x15.png,
                                 icons/pmd_37x15.png_NOTICE.txt,
                                 icons/question-256-flip-filled.png,
                                 icons/question-256.png_NOTICE.txt,
-                                META-INF/*,
                                 svg/*,
-                                LICENCE.txt,
-                                NOTICE.txt"
+                                META-INF/*"
                      excludes="pmd/*"/>
+            <metainf dir="${basedir}"
+                        includes="LICENSE.txt,
+                                    NOTICE.txt
+            "/>
         </jar>
 
         <zip basedir="${basedir}"
