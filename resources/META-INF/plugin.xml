@@ -1,14 +1,16 @@
 <idea-plugin>
     <id>codesparks.pmd.demo</id>
     <name>CodeSparks-PMD</name>
-    <version>1.0</version>
+    <version>1.0.0</version>
     <!-- @formatter:off -->
     <vendor email="olivermoseler@gmail.com" url="https://de.linkedin.com/in/oliver-moseler">Oliver Moseler</vendor>
     <!-- @formatter:on -->
 
     <description>
-        This is a demo implementation of the CodeSparks framework, which augments source code with interactive,
-        glyph-based in-situ visualizations that depict the cyclomatic complexity of class and method artifacts.
+        This is a demo implementation of a CodeSparks plugin for the IntelliJ IDEA that can be used as a template for
+        further plugins. It makes use of the PMD Java API to calculate the cyclomatic complexity of Java classes and
+        methods in the current project. Using the CodeSparks framework, the source code is augmented with interactive
+        glyph-based visualizations that display the values of the cyclomatic complexity and an interpretation of them.
         <![CDATA[
         <br><br>
         <a href="https://www.flaticon.com/free-icons/question" title="question icons">Question icons created by Saepul Nahwan - Flaticon</a>
