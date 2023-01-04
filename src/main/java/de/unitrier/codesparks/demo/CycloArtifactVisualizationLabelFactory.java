@@ -11,6 +11,7 @@ import de.unitrier.st.codesparks.java.JavaUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.tools.Tool;
 import java.awt.*;
 import java.net.URL;
 
@@ -179,15 +180,26 @@ final class CycloArtifactVisualizationLabelFactory extends AArtifactVisualizatio
         final URL resource = getClass().getResource(resourceString);
         if (resource != null)
         {
+            final Cursor defaultCursor = Cursor.getDefaultCursor();
+
+
             final ImageIcon imageIcon = new ImageIcon(resource);
             final int iconWidth = imageIcon.getIconWidth();
             final int iconHeight = imageIcon.getIconHeight();
-            final Dimension bestCursorSize = toolkit.getBestCursorSize(iconWidth, iconHeight);
+
+            final Dimension cursorSize = Toolkit.getDefaultToolkit().getBestCursorSize(0, 0);
             final Cursor customCursor = toolkit.createCustomCursor(
                     imageIcon.getImage(),
-                    new Point(bestCursorSize.width / 2, bestCursorSize.height / 2),
+                    new Point(cursorSize.width / 2, cursorSize.height / 2),
                     "question-mark"
             );
+            //final Dimension bestCursorSize = toolkit.getBestCursorSize(iconWidth, iconHeight);
+//            final Cursor customCursor = toolkit.createCustomCursor(
+//                    imageIcon.getImage(),
+//                    new Point(bestCursorSize.width / 2, bestCursorSize.height / 2),
+//                    "question-mark"
+//            );
+
             jLabel.setCursor(customCursor);
         } else
         {
