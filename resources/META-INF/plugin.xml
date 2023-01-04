@@ -1,7 +1,6 @@
 <idea-plugin>
     <id>codesparks.pmd.demo</id>
-    <!--suppress PluginXmlCapitalization -->
-    <name>CodeSparks Demo powered by PMD</name>
+    <name>CodeSparks Demo</name>
     <version>1.0.0</version>
     <!-- @formatter:off -->
     <vendor email="olivermoseler@gmail.com" url="https://de.linkedin.com/in/oliver-moseler">Oliver Moseler</vendor>
@@ -22,7 +21,7 @@
     </change-notes-->
 
     <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-    <idea-version since-build="222.2680.4"/>
+    <idea-version since-build="222.4459.24"/>
 
     <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->

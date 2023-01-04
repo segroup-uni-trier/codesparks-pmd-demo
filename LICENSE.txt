@@ -201,7 +201,7 @@
    limitations under the License.
    
 ------------------------------------------------------------------------------
-License for PMD
+License for PMD, https://github.com/pmd/pmd/blob/master/LICENSE
 ------------------------------------------------------------------------------
 PMD's BSD-style license:
 
