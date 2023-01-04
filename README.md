@@ -38,3 +38,7 @@ Operating systems:
 IntelliJ IDEA versions:
 
 1. 2022.2.4 Community Edition (Build #IC-222.4459.24, built on November 22, 2022)
+
+## License
+
+CodeSparks Demo powered by PMD is Open Source software released under the Apache 2.0 license.
