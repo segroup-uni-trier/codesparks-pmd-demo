@@ -9,7 +9,7 @@ is licensed under the Apache License, Version 2.0;
 for more info see https://www.apache.org/licenses/LICENSE-2.0
 
 Part of this product (mostly the package net.sourceforge.pmd of the pmd-core and pmd-java library)
-is licensed under a BSD-style license which is included in the LICEENSE.txt;
+is licensed under a BSD-style license which is included in the LICENSE.txt;
 for more info see https://github.com/pmd/pmd/blob/master/LICENSE 
 
 Part of this product (mostly the package net.sourceforge.pmd.lang.vm of the pmd-core library)
