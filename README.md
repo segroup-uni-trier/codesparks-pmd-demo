@@ -1,4 +1,4 @@
-# CodeSparks-PMD
+# CodeSparks Demo powered by PMD
 
 This is a demo implementation of a CodeSparks plugin for the IntelliJ IDEA that can be used as a template for further plugins. It makes use of the [PMD Java API](https://pmd.sourceforge.io/pmd-6.29.0/pmd_userdocs_tools_java_api.html) to calculate the cyclomatic complexity of Java classes and methods in the current project. Using the [CodeSparks framework](https://github.com/segroup-uni-trier/codesparks-core), the source code is augmented with interactive glyph-based visualizations that display the values of the cyclomatic complexity and an interpretation of them.
 
