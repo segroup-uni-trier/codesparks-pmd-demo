@@ -1,4 +1,4 @@
-CodeSparks Demo powered by PMD
+CodeSparks Demo Plugin
 
 This product is licensed under the Apache License, Version 2.0;
 for more info see https://www.apache.org/licenses/LICENSE-2.0 or LICENSE.txt
