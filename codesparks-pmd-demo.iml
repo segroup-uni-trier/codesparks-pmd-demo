@@ -31,6 +31,6 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="codesparks-core" />
+    <orderEntry type="module" module-name="codesparks-framework" />
   </component>
 </module>

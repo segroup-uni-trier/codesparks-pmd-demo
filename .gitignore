@@ -1,6 +1,7 @@
 # Custom
 .idea/*
 !.idea/modules.xml
+!.idea/ant.xml
 out
 .run/*
 !.run/CodeSparks-PMD-Demo.run.xml
