@@ -14,9 +14,9 @@ Prerequisites:
 1. Apache Ant (>=1.10)
 2. JDK 11
 3. IntelliJ IDEA Community Edition 2022.2.4 (or comparable)
-3. Specify the path to the IntelliJ IDEA installation directory in the `idea.properties` file.
+4. Specify the path to the IntelliJ IDEA installation directory in the `idea.properties` file.
 
-To create the actual CodeSparks plugin simply `ant zip` in the terminal.
+To create the actual CodeSparks plugin run `ant` (default target=`zip`) in the terminal.
 
 ## Install
 
