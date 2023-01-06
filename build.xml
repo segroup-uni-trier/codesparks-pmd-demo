@@ -97,9 +97,9 @@
         <property name="jdk.home.intellij_idea" value="${jdk.home.intellij_idea.windows}"/>
     </target>
 
-	<target name="set-intellij-path" depends="intellij-path-linux, intellij-path-windows">
-	    	<echo message="${jdk.home.intellij_idea}"/>
-	</target>
+    <target name="set-intellij-path" depends="intellij-path-linux, intellij-path-windows">
+        <echo message="${jdk.home.intellij_idea}"/>
+    </target>
 
     <target name="def-libs" depends="intellij-path-linux, intellij-path-windows, retrieve">
         <!--        <echo message="${jdk.home.intellij_idea}"/>-->
@@ -169,8 +169,11 @@
             <fileset dir="${resources.dir}/pmd" includes="codesparks-pmd-demo.xml"/>
             <fileset dir="${lib.dir}"
                      includes="pmd-core-6.29.0.jar, pmd-java-6.29.0.jar, codesparks-core-*.jar, codesparks-java-*.jar"
-                     excludes="codesparks-core-*-sources.jar, codesparks-java-*-sources.jar"
-            />
+                     excludes="codesparks-core-*-sources.jar,
+                               codesparks-core-*-javadoc.jar,
+                               codesparks-java-*-sources.jar,
+                               codesparks-java-*-javadoc.jar
+            "/>
         </copy>
 
         <jar basedir="${classes.dir}" destfile="${codesparks-pmd-demo.jar}">
@@ -183,7 +186,7 @@
                                 META-INF/*"
                      excludes="pmd/*"/>
             <metainf dir="${basedir}"
-                        includes="LICENSE.txt,
+                     includes="LICENSE.txt,
                                     NOTICE.txt
             "/>
         </jar>
