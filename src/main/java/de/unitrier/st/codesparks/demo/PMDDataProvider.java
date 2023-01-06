@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package de.unitrier.codesparks.demo;
+package de.unitrier.st.codesparks.demo;
 
 import de.unitrier.st.codesparks.core.ADataProvider;
 import de.unitrier.st.codesparks.core.CoreUtil;

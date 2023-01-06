@@ -14,20 +14,15 @@
  *  limitations under the License.
  */
 
-package de.unitrier.codesparks.demo;
+package de.unitrier.st.codesparks.demo;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.project.Project;
-import org.jetbrains.annotations.NotNull;
+import de.unitrier.st.codesparks.java.JavaClassArtifact;
 
-public class StartPMDFlowAction extends AnAction
+@JavaClassArtifact
+public class PMDClassArtifact extends PMDArtifact
 {
-    @Override
-    public void actionPerformed(@NotNull final AnActionEvent anActionEvent)
+    public PMDClassArtifact(final String identifier, final String name)
     {
-        final Project project = anActionEvent.getProject();
-        final PMDFlow pmdFlow = new PMDFlow(project);
-        new Thread(pmdFlow).start();
+        super(identifier, name);
     }
 }

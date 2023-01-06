@@ -31,7 +31,7 @@
 
     <actions>
         <action id="pmd.demo.start.codesparks.flow"
-                class="de.unitrier.codesparks.demo.StartPMDFlowAction"
+                class="de.unitrier.st.codesparks.demo.StartPMDFlowAction"
                 text="Start CodeSparks Flow"
                 icon="/icons/pmd_37x15.png">
             <add-to-group group-id="MainToolBar" anchor="last"/>

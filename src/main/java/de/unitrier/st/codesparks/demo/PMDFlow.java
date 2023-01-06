@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package de.unitrier.codesparks.demo;
+package de.unitrier.st.codesparks.demo;
 
 import com.intellij.openapi.project.Project;
 import de.unitrier.st.codesparks.core.ACodeSparksFlow;

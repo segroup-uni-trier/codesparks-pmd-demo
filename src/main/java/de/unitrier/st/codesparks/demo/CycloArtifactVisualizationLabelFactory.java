@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package de.unitrier.codesparks.demo;
+package de.unitrier.st.codesparks.demo;
 
 import de.unitrier.st.codesparks.core.data.AArtifact;
 import de.unitrier.st.codesparks.core.data.ANumericMetricIdentifier;

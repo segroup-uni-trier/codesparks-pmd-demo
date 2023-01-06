@@ -14,18 +14,15 @@
  *  limitations under the License.
  */
 
-package de.unitrier.codesparks.demo;
+package de.unitrier.st.codesparks.demo;
 
-import de.unitrier.st.codesparks.java.JavaMethodArtifact;
-
-/*
- * Must be public because it might be called via reflection.
- */
-@JavaMethodArtifact
-public final class PMDMethodArtifact extends PMDArtifact
+final class PMDArtifactUtil
 {
-    public PMDMethodArtifact(final String identifier, final String name)
+    private PMDArtifactUtil() {}
+
+    static String getArtifactIdentifier(final String fileName, final String artifactName, final int lineNumber)
     {
-        super(identifier, name);
+        return String.format("%s:%s@%d", fileName, artifactName, lineNumber);
     }
+
 }
