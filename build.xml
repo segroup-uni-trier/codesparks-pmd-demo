@@ -165,7 +165,6 @@
         <mkdir dir="${zip.dir.lib}"/>
 
         <copy todir="${zip.dir.lib}">
-            <fileset dir="${resources.dir}/" includes="LICENSE.txt"/>
             <fileset dir="${resources.dir}/pmd" includes="codesparks-pmd-demo.xml"/>
             <fileset dir="${lib.dir}"
                      includes="pmd-core-6.29.0.jar, pmd-java-6.29.0.jar, codesparks-core-*.jar, codesparks-java-*.jar"
@@ -174,6 +173,7 @@
                                codesparks-java-*-sources.jar,
                                codesparks-java-*-javadoc.jar
             "/>
+            <fileset dir="${basedir}" includes="LICENSE.txt, NOTICE.txt"/>
         </copy>
 
         <jar basedir="${classes.dir}" destfile="${codesparks-pmd-demo.jar}">
