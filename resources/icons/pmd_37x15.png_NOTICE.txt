@@ -1,0 +1,5 @@
+Title: Logo (300px, transparent)
+Author: PMD Open Source Project
+Source: https://docs.pmd-code.org/pmd-doc-7.0.0-SNAPSHOT/pmd_projectdocs_logo.html
+License: CC BY 4.0, https://creativecommons.org/licenses/by/4.0/
+Modifications: Downscaled to 37x15 pixels

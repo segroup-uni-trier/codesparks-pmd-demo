@@ -1,4 +1,3 @@
-[submodule "codesparks-core"]
-	path = codesparks-core
-	url = git@github.com:/segroup-uni-trier/codesparks-core.git
-	branch = main
+[submodule "codesparks-framework"]
+	path = codesparks-framework
+	url = git@github.com:segroup-uni-trier/codesparks-framework.git

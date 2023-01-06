@@ -9,45 +9,28 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="codesparks-core" />
     <orderEntry type="module-library">
       <library name="pmd-java-6.29.0">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/pmd-java-6.29.0.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$MODULE_DIR$/lib/pmd-java-6.29.0-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$MODULE_DIR$/lib/pmd-java-6.29.0-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/asm-9.0-beta.jar!/" />
-        </CLASSES>
-        <JAVADOC>
-          <root url="jar://$MODULE_DIR$/lib/asm-9.0-beta-javadoc.jar!/" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$MODULE_DIR$/lib/asm-9.0-beta-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
+      <library name="pmd-core-6.29.0">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/pmd-core-6.29.0.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$MODULE_DIR$/lib/pmd-core-6.29.0-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
           <root url="jar://$MODULE_DIR$/lib/pmd-core-6.29.0-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="codesparks-framework" />
   </component>
 </module>

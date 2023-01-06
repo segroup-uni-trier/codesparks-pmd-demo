@@ -1,11 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="codesparks-pmd-demo" basedir="." default="retrieve" xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="codesparks-pmd-demo" basedir="." default="zip" xmlns:ivy="antlib:org.apache.ivy.ant"
+         xmlns:unless="ant:unless" xmlns:if="ant:if">
+
+    <!-- Semantic Versioning, https://semver.org/ -->
+
+    <property name="major" value="1"/>
+    <property name="minor" value="0"/>
+    <property name="patch" value="0"/>
+
+    <property name="version" value="${major}.${minor}.${patch}"/>
+
+    <!-- General properties -->
 
     <property name="lib.dir" value="lib"/>
+    <property name="resources.dir" value="resources"/>
+    <property name="src.dir" value="src/main"/>
+    <property name="build.dir" value="build"/>
+    <property name="classes.dir" value="${build.dir}/classes/main"/>
+    <property name="jars.dir" value="${build.dir}/jars"/>
+
+    <condition property="is-windows">
+        <os family="windows"/>
+    </condition>
+
+    <condition property="is-linux">
+        <and>
+            <os family="unix"/>
+            <not>
+                <os family="mac"/>
+            </not>
+        </and>
+    </condition>
 
     <!-- Ivy -->
 
-    <property name="ivy.install.version" value="2.4.0"/>
+    <property name="ivy.install.version" value="2.5.1"/>
     <property name="ivy.jar.dir" value="${user.home}/.ivy2"/>
     <property name="ivy.jar.file" value="ivy-${ivy.install.version}.jar"/>
     <property name="ivy.jar.path" value="${ivy.jar.dir}/${ivy.jar.file}"/>
@@ -31,8 +60,6 @@
         <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
     </target>
 
-    <!--available file="${lib.dir}" type="dir" property="lib.dir.exists"/-->
-
     <target name="retrieve" depends="ivy-init" description="retrieve dependencies with ivy">
         <ivy:retrieve/> <!-- Includes resolve -->
     </target>
@@ -43,6 +70,131 @@
 
     <!-- Cleanup -->
 
-  
+    <available file="${classes.dir}" type="dir" property="classes.dir.exists"/>
+
+    <target name="clean-classes" if="classes.dir.exists">
+        <delete includeemptydirs="true">
+            <fileset dir="${classes.dir}" includes="**/*" excludes="*.*"/>
+        </delete>
+        <echo message="Cleaned class files"/>
+    </target>
+
+    <!-- Compilation -->
+
+    <property file="idea.properties"/>
+
+    <target name="intellij-path-linux" if="is-linux">
+        <property unless:set="jdk.home.intellij_idea.linux"
+                  name="jdk.home.intellij_idea.linux"
+                  value="/opt/idea-IC-${idea.version.linux}"/>
+        <property name="jdk.home.intellij_idea" value="${jdk.home.intellij_idea.linux}"/>
+    </target>
+
+    <target name="intellij-path-windows" if="is-windows">
+        <property unless:set="jdk.home.intellij_idea.windows"
+                  name="jdk.home.intellij_idea.windows"
+                  value="C:/Program Files/JetBrains/IntelliJ IDEA Community Edition ${idea.version.windows}"/>
+        <property name="jdk.home.intellij_idea" value="${jdk.home.intellij_idea.windows}"/>
+    </target>
+
+	<target name="set-intellij-path" depends="intellij-path-linux, intellij-path-windows">
+	    	<echo message="${jdk.home.intellij_idea}"/>
+	</target>
+
+    <target name="def-libs" depends="intellij-path-linux, intellij-path-windows, retrieve">
+        <!--        <echo message="${jdk.home.intellij_idea}"/>-->
+        <path id="libs">
+            <fileset dir="${lib.dir}" includes="*.jar"/>
+            <fileset dir="${jdk.home.intellij_idea}/lib" includes="**/*.jar"
+                     excludes="kotlin-stdlib-jdk8.jar,ant/lib/ant.jar"/>
+            <!--
+            Excluding '3rd-party-rt.jar' will make the tests of codesparks-jpt fail because the classes cannot be
+            found anymore.
+            -->
+            <fileset dir="${jdk.home.intellij_idea}/plugins/java"
+                     includes="**/*.jar"/> <!-- Although it compiles without these dependencies, it is required for, e.g. the class 'PsiClass' which is contained in the IntelliJ Plugin Development's internal 'Java Plugin'. So don't remove it!!! -->
+        </path>
+    </target>
+
+    <property environment="env"/>
+
+    <target name="compile" depends="clean-classes, def-libs"
+            unless="compilation-executed">
+        <echo message="${jdk.home.intellij_idea}"/>
+        <echo message="OS Name is:         ${os.name}"/>
+        <echo message="OS Architecture is: ${os.arch}"/>
+        <echo message="OS Version is:      ${os.version}"/>
+        <mkdir dir="${classes.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" debug="true" includeantruntime="false">
+            <classpath>
+                <path refid="libs"/>
+            </classpath>
+            <compilerarg
+                    line="-encoding UTF-8 -source 11 --system &quot;${env.JAVA_HOME}&quot; -target 11 -Xlint:-unchecked"/>
+        </javac>
+        <property name="compilation-executed" value="true"/>
+    </target>
+
+    <property name="idea.version.windows.pmd-rules.copy.path" value="${idea.version.major}.${idea.version.minor}"/>
+
+    <target name="copy-pmd-rules" depends="copy-pmd-rules-windows, copy-pmd-rules-linux"
+            description="This task is used to copy the PMD rules to the IntelliJ plugin sandbox folder in case that folder was deleted or has not yet been created."/>
+
+    <target name="copy-pmd-rules-windows" if="is-windows">
+        <copy file="resources\pmd\codesparks-pmd-demo.xml"
+              todir="${user.home}\AppData\Local\JetBrains\IdeaIC${idea.version.windows.pmd-rules.copy.path}\plugins-sandbox\plugins\${ant.project.name}\lib"
+              overwrite="true"/>
+    </target>
+
+    <target name="copy-pmd-rules-linux" if="is-linux">
+        <copy file="resources/pmd/codesparks-pmd-demo.xml"
+              todir="${user.home}/.cache/JetBrains/IdeaIC${idea.version.major}.${idea.version.minor}/plugins-sandbox/plugins/${ant.project.name}/lib"
+              overwrite="true"/>
+    </target>
+
+    <!-- Create the plugin ZIP -->
+
+    <property name="zip.file" value="${ant.project.name}-${version}.zip"/>
+    <property name="zip.dir" value="${ant.project.name}"/>
+    <property name="zip.dir.lib" value="${zip.dir}/lib"/>
+    <property name="codesparks-pmd-demo.jar" value="${zip.dir.lib}/${ant.project.name}-${version}.jar"/>
+
+    <target name="zip" depends="compile">
+        <delete file="${zip.file}"/>
+
+        <mkdir dir="${zip.dir.lib}"/>
+
+        <copy todir="${zip.dir.lib}">
+            <fileset dir="${resources.dir}/" includes="LICENSE.txt"/>
+            <fileset dir="${resources.dir}/pmd" includes="codesparks-pmd-demo.xml"/>
+            <fileset dir="${lib.dir}"
+                     includes="pmd-core-6.29.0.jar, pmd-java-6.29.0.jar, codesparks-core-*.jar, codesparks-java-*.jar"
+                     excludes="codesparks-core-*-sources.jar, codesparks-java-*-sources.jar"
+            />
+        </copy>
+
+        <jar basedir="${classes.dir}" destfile="${codesparks-pmd-demo.jar}">
+            <fileset dir="${resources.dir}"
+                     includes="icons/pmd_37x15.png,
+                                icons/pmd_37x15.png_NOTICE.txt,
+                                icons/question-256-flip-filled.png,
+                                icons/question-256.png_NOTICE.txt,
+                                svg/*,
+                                META-INF/*"
+                     excludes="pmd/*"/>
+            <metainf dir="${basedir}"
+                        includes="LICENSE.txt,
+                                    NOTICE.txt
+            "/>
+        </jar>
+
+        <zip basedir="${basedir}"
+             destfile="${zip.file}"
+             encoding="UTF-8"
+             includes="${zip.dir}/**/*">
+        </zip>
+
+        <delete dir="${zip.dir}"/>
+    </target>
 
 </project>

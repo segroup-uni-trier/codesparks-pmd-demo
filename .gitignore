@@ -1,9 +1,18 @@
-# Compiled class file
-*.class
-
+# Custom
 .idea/*
 !.idea/modules.xml
+!.idea/ant.xml
 out
+.run/*
+!.run/CodeSparks-PMD-Demo.run.xml
+*.iml
+!codesparks-pmd-demo.iml
+*.jar
+!lib/codesparks-core-*.jar
+!lib/codesparks-java-*.jar
+
+# Compiled class file
+*.class
 
 # Log file
 *.log
@@ -15,7 +24,7 @@ out
 .mtj.tmp/
 
 # Package Files #
-*.jar
+
 *.war
 *.nar
 *.ear

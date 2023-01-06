@@ -1,19 +1,27 @@
 <idea-plugin>
-    <id>de.unitrier.st.fst20.codesparks.pmd.demo</id>
-    <name>FST'20 - CodeSparks</name>
-    <version>1.0</version>
+    <id>codesparks.pmd.demo</id>
+    <name>CodeSparks Demo</name>
+    <version>1.0.0</version>
     <!-- @formatter:off -->
-    <vendor email="softwaretechnik@informatik.uni-trier.de" url="https://www.st.uni-trier.de">University of Trier - Software Engineering Group</vendor>
+    <vendor email="olivermoseler@gmail.com" url="https://de.linkedin.com/in/oliver-moseler">Oliver Moseler</vendor>
     <!-- @formatter:on -->
 
-    <!--description>
-    </description-->
+    <description>
+        This is a demo implementation of a CodeSparks plugin for the IntelliJ IDEA that can be used as a template for
+        further plugins. It makes use of the PMD Java API to calculate the cyclomatic complexity of Java classes and
+        methods in the current project. Using the CodeSparks framework, the source code is augmented with interactive
+        glyph-based visualizations that display the values of the cyclomatic complexity and an interpretation of them.
+        <![CDATA[
+        <br><br>
+        <a href="https://www.flaticon.com/free-icons/question" title="question icons">Question icons created by Saepul Nahwan - Flaticon</a>
+        ]]>
+    </description>
 
     <!--change-notes>
     </change-notes-->
 
     <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-    <idea-version since-build="201.6668.113"/>
+    <idea-version since-build="222.4459.24"/>
 
     <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
@@ -21,20 +29,17 @@
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.java</depends>
 
-    <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceInterface="de.unitrier.st.codesparks.core.service.ACodeSparksInstanceService"
-                            serviceImplementation="de.unitrier.st.fst20.codesparks.PMDInstanceService"
-        />
-    </extensions>
-
     <actions>
-        <!-- Add your actions here -->
-        <action id="codesparks.start.flow"
-                class="de.unitrier.st.fst20.codesparks.StartPMDFlowAction"
-                text="Start PMD Flow"
-                description="Start pmd flow"
-                icon="/icons/pmd_37x15.png"
-        >
+        <action id="pmd.demo.start.codesparks.flow"
+                class="de.unitrier.st.codesparks.demo.StartPMDFlowAction"
+                text="Start CodeSparks Flow"
+                icon="/icons/pmd_37x15.png">
+            <add-to-group group-id="MainToolBar" anchor="last"/>
+        </action>
+        <action id="pmd.demo.toggle.visualizations"
+                class="de.unitrier.st.codesparks.core.action.ToggleVisualization"
+                text="Hide CodeSparks Visualizations"
+                icon="/icons/codesparks_visible_20x13.png">
             <add-to-group group-id="MainToolBar" anchor="last"/>
         </action>
     </actions>

@@ -3,6 +3,5 @@
     <dependencies>
         <dependency org="net.sourceforge.pmd" name="pmd-core" rev="6.29.0" transitive="false"/>
         <dependency org="net.sourceforge.pmd" name="pmd-java" rev="6.29.0" transitive="false"/>
-        <dependency org="org.ow2.asm" name="asm" rev="9.0-beta" transitive="false"/>
     </dependencies>
 </ivy-module>

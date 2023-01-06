@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/codesparks-core/codesparks-core.iml" filepath="$PROJECT_DIR$/codesparks-core/codesparks-core.iml" />
-      <module fileurl="file://$PROJECT_DIR$/fst20-moseler-codesparks-pmd-demo.iml" filepath="$PROJECT_DIR$/fst20-moseler-codesparks-pmd-demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/codesparks-framework/codesparks-framework.iml" filepath="$PROJECT_DIR$/codesparks-framework/codesparks-framework.iml" />
+      <module fileurl="file://$PROJECT_DIR$/codesparks-pmd-demo.iml" filepath="$PROJECT_DIR$/codesparks-pmd-demo.iml" />
     </modules>
   </component>
 </project>
