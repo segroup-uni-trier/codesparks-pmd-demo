@@ -20,7 +20,9 @@ To create the actual CodeSparks plugin run `ant` (default target=`zip`) in the t
 
 ## Install
 
-Download the ZIP file from the release section or build it yourself.
+Download the the [pre-built demo plugin](https://github.com/segroup-uni-trier/codesparks-pmd-demo/releases/download/v1.0.0/codesparks-pmd-demo-1.0.0.zip) (ZIP file from the [releases](https://github.com/segroup-uni-trier/codesparks-pmd-demo/releases) section).
+
+Or build it yourself from the sources: Download the sources and type `ant` in the terminal which will run the default target `zip` (see build.xml).
 
 The ZIP file can then be installed in IntelliJ IDEA:
 
