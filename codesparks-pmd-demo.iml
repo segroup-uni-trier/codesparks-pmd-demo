@@ -32,5 +32,18 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="codesparks-framework" />
+    <orderEntry type="module-library">
+      <library name="asm-9.0-beta">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/asm-9.0-beta.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/lib/asm-9.0-beta-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/lib/asm-9.0-beta-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
   </component>
 </module>
