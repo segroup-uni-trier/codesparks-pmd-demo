@@ -3,7 +3,7 @@
     <name>CodeSparks Demo</name>
     <version>1.0.0</version>
     <!-- @formatter:off -->
-    <vendor email="olivermoseler@gmail.com" url="https://de.linkedin.com/in/oliver-moseler">Oliver Moseler</vendor>
+    <vendor email="olivermoseler@gmail.com" url="https://www.researchgate.net/profile/Oliver-Moseler">Oliver Moseler</vendor>
     <!-- @formatter:on -->
 
     <description>
@@ -34,13 +34,13 @@
                 class="de.unitrier.st.codesparks.demo.StartPMDFlowAction"
                 text="Start CodeSparks Flow"
                 icon="/icons/pmd_37x15.png">
-            <add-to-group group-id="MainToolBar" anchor="last"/>
+            <add-to-group group-id="MainToolbarRight" anchor="last"/>
         </action>
         <action id="pmd.demo.toggle.visualizations"
                 class="de.unitrier.st.codesparks.core.action.ToggleVisualization"
                 text="Hide CodeSparks Visualizations"
                 icon="/icons/codesparks_visible_20x13.png">
-            <add-to-group group-id="MainToolBar" anchor="last"/>
+            <add-to-group group-id="MainToolbarRight" anchor="last"/>
         </action>
     </actions>
 
